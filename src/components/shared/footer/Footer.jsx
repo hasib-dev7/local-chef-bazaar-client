@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Container from "../../container/Container";
+import TitleLogo from "../TitleLogo/TitleLogo";
 
 const Footer = () => {
   return (
@@ -20,14 +21,8 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Brand */}
             <div className="space-y-4">
-              <Link to="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-[#f07f2c] flex items-center justify-center">
-                  <ChefHat className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xl font-bold font-display">
-                  LocalChef<span className="text-[#f07f2c]">Bazaar</span>
-                </span>
-              </Link>
+              {/* title and logo */}
+              <TitleLogo></TitleLogo>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Connecting home cooks with food lovers. Fresh, homemade meals
                 delivered to your doorstep.

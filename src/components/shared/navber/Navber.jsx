@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router";
 import Container from "../../container/Container";
 import { ChefHat } from "lucide-react";
+import { label } from "framer-motion/client";
+import TitleLogo from "../TitleLogo/TitleLogo";
 
 const Navber = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -22,6 +24,7 @@ const Navber = () => {
       {[
         { to: "/", label: "Home" },
         { to: "/meals", label: "Meals" },
+        { to: "/register", label: "Register" },
       ].map((link) => (
         <li>
           <NavLink
@@ -29,8 +32,8 @@ const Navber = () => {
             className={({ isActive }) =>
               `px-4 py-2 rounded-md transition-colors duration-300 ${
                 isActive
-                  ? "bg-[#f07f2c] text-white"
-                  : "text-gray-700 hover:bg-[#f07f2c] hover:text-white"
+                  ? "bg-primary text-white"
+                  : "text-gray-700 hover:bg-primary hover:text-white"
               }`
             }
           >
@@ -78,16 +81,7 @@ const Navber = () => {
                 </ul>
               </div>
               {/* nav logo */}
-              <div>
-                <Link to="/" className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-[#f07f2c] flex items-center justify-center">
-                    <ChefHat className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="text-xl font-bold font-display">
-                    LocalChef<span className="text-[#f07f2c]">Bazaar</span>
-                  </span>
-                </Link>
-              </div>
+              <TitleLogo></TitleLogo>
             </div>
 
             {/* Navbar Center */}
