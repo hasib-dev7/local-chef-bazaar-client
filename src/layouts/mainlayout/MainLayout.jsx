@@ -1,0 +1,42 @@
+import { Outlet } from "react-router";
+import Container from "../../components/container/Container";
+import Navber from "../../components/shared/navber/Navber";
+import Footer from "../../components/shared/footer/Footer";
+import { Bounce, ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
+
+const MainLayout = () => {
+  return (
+    <>
+      <div className="flex flex-col  min-h-screen ">
+        {/* navber */}
+        <Navber></Navber>
+        {/* outlate */}
+        <div className="flex-1">
+          <Container>
+            <Outlet></Outlet>
+          </Container>
+        </div>
+        {/* footer */}
+        <Footer></Footer>
+      </div>
+      {/* react toast */}
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+      <Toaster></Toaster>
+    </>
+  );
+};
+
+export default MainLayout;
