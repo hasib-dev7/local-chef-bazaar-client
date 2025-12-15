@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router";
+import { NavLink } from "react-router";
 import Container from "../../container/Container";
-import { ChefHat } from "lucide-react";
-import { label } from "framer-motion/client";
+
 import TitleLogo from "../TitleLogo/TitleLogo";
+import useAuth from "../../../hooks/useAuth";
+import { Link } from "react-router";
+import { ChefHat } from "lucide-react";
 
 const Navber = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-
   // Scroll listener
   useEffect(() => {
     const handleScroll = () => {
@@ -15,19 +16,23 @@ const Navber = () => {
       else setIsScrolled(false);
     };
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
+  const { user, logOut } = useAuth();
+  const handleLogout = () => {
+    logOut();
+  };
   const navLinks = (
     <>
       {[
         { to: "/", label: "Home" },
         { to: "/meals", label: "Meals" },
         { to: "/register", label: "Register" },
-      ].map((link) => (
+        { to: "/login", label: "Login" },
+      ].map((link, index) => (
         <li>
           <NavLink
+            key={index}
             to={link.to}
             className={({ isActive }) =>
               `px-4 py-2 rounded-md transition-colors duration-300 ${
@@ -81,7 +86,16 @@ const Navber = () => {
                 </ul>
               </div>
               {/* nav logo */}
-              <TitleLogo></TitleLogo>
+              <div className="hidden lg:block">
+                <TitleLogo></TitleLogo>
+              </div>
+              <div className="lg:hidden">
+                <Link to="/" className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+                    <ChefHat className="w-6 h-6 text-white" />
+                  </div>
+                </Link>
+              </div>
             </div>
 
             {/* Navbar Center */}
@@ -91,7 +105,57 @@ const Navber = () => {
 
             {/* Navbar End */}
             <div className="navbar-end">
-              <h1>navber end</h1>
+              {user ? (
+                <div className="dropdown dropdown-left">
+                  <label
+                    tabIndex={0}
+                    className="btn btn-ghost rounded-full flex items-center gap-2"
+                  >
+                    <img
+                      src={user.photoURL}
+                      alt={user.displayName}
+                      className={`rounded-full border-2 border-gray-300 transition-all duration-300 ${
+                        isScrolled ? "w-6 h-6" : "w-8 h-8"
+                      }`}
+                    />
+                    <span
+                      className={`hidden md:inline font-medium transition-all duration-300 ${
+                        isScrolled ? "text-sm" : "text-base"
+                      }`}
+                    >
+                      {user.displayName}
+                    </span>
+                  </label>
+                  <ul className="dropdown-content menu bg-white/80 backdrop-blur-md rounded-box shadow-md w-52 p-2 mt-1">
+                    <li>
+                      <h4 className="font-semibold">{user.displayName}</h4>
+                    </li>
+                    <li>
+                      <button
+                        onClick={handleLogout}
+                        className="text-red-500 font-semibold hover:text-red-700 transition-colors"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <Link
+                    to="/login"
+                    className="px-2 lg:px-4 py-2 lg:py-3 rounded-md lg:rounded-lg bg-white text-black hover:bg-[#22c35d] hover:text-white "
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="px-2 lg:px-4 py-2 lg:py-3 rounded-md lg:rounded-lg bg-primary text-white"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </Container>
