@@ -5,6 +5,7 @@ import Login from "../pages/login/Login";
 import Register from "../pages/register/Register";
 import Meals from "../pages/meals/Meals";
 import PrivateRouter from "./PrivateRouter";
+import DashboardLayout from "../layouts/dashboard/DashboardLayout";
 
 export const routes = createBrowserRouter([
   {
@@ -17,11 +18,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: "meals",
-        element: (
-          <PrivateRouter>
-            <Meals></Meals>
-          </PrivateRouter>
-        ),
+        element: <Meals></Meals>,
       },
       // login and register pages
       {
@@ -33,5 +30,15 @@ export const routes = createBrowserRouter([
         element: <Register></Register>,
       },
     ],
+  },
+  // dashboard layout
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRouter>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRouter>
+    ),
+    children: [],
   },
 ]);

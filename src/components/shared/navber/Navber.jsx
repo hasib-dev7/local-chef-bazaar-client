@@ -27,8 +27,7 @@ const Navber = () => {
       {[
         { to: "/", label: "Home" },
         { to: "/meals", label: "Meals" },
-        { to: "/register", label: "Register" },
-        { to: "/login", label: "Login" },
+        ...(user ? [{ to: "/dashboard", label: "Dashboard" }] : []),
       ].map((link, index) => (
         <li>
           <NavLink
