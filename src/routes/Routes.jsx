@@ -39,6 +39,8 @@ export const routes = createBrowserRouter([
         <DashboardLayout></DashboardLayout>
       </PrivateRouter>
     ),
-    children: [],
+    children: [
+      
+    ],
   },
 ]);
