@@ -3,6 +3,8 @@ import Sidebar from "../../pages/dashboard/sidebar/Sidebar";
 import { Menu, X } from "lucide-react";
 import { Outlet, useLocation } from "react-router";
 import DashboardNavbar from "../../components/shared/navber/DashboardNavbar";
+import { Bounce, ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 
 const DashboardLayout = () => {
   const [open, setOpen] = useState(false);
@@ -42,6 +44,21 @@ const DashboardLayout = () => {
           </div>
         </main>
       </div>
+      {/* react toast */}
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+      <Toaster></Toaster>
     </>
   );
 };

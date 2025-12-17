@@ -9,7 +9,7 @@ const CustomButton = React.forwardRef(({ className, children, ...props }, ref) =
       whileTap={{ scale: 0.99 }}
       whileHover={{ scale: 1.01, transition: { yoyo: Infinity } }}
       className={cn(
-        "w-full text-sm font-medium py-3 rounded-lg text-white bg-primary flex justify-center items-center gap-2",
+        "w-full text-sm font-medium py-3 rounded-lg text-white bg-primary ",
         className
       )}
       {...props}

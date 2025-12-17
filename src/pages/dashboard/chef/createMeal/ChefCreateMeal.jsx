@@ -8,12 +8,38 @@ import { Utensils } from "lucide-react";
 import useAuth from "../../../../hooks/useAuth";
 import Textarea from "../../../../components/ui/Textarea";
 import { imageUpload } from "../../../../utils/imageUpload";
+import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { TbFidgetSpinner } from "react-icons/tb";
+import { toast } from "react-toastify";
 const ChefCreateMeal = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const {
+    isPending,
+    isError,
+    mutateAsync,
+    reset: mutationReset,
+  } = useMutation({
+    mutationFn: async (payload) =>
+      await axios.post(`${import.meta.env.VITE_API_URL}/meals`, payload),
+    onSuccess: () => {
+      toast.success("meals Added successfully");
+      // invalidateQueries
+      queryClient.invalidateQueries(["meals"]);
+      //
+      mutationReset();
+    },
+    onError: () => {
+      toast.error("Something went wrong!");
+    },
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
   //
   const onSubmit = async (data) => {
@@ -29,21 +55,27 @@ const ChefCreateMeal = () => {
       chefExperience,
     } = data;
     const imageFile = image[0];
+    // Ingredients clean array
+    const ingredientsArray = ingredients.split(",").map((item) => item.trim());
     try {
       const imageURL = await imageUpload(imageFile);
-      console.log(
+      const mealsData = {
         foodName,
         chefName,
-        price,
+        price: Number(price),
         deliveryTime,
         email,
         chefID,
         imageURL,
-        ingredients,
-        chefExperience
-      );
+        ingredients: ingredientsArray,
+        chefExperience,
+      };
+      // meals data sever db
+      await mutateAsync(mealsData);
+      // from reset
+      reset();
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     }
   };
   //   animation
@@ -82,7 +114,7 @@ const ChefCreateMeal = () => {
                   {...register("foodName", {
                     required: "Food name is required",
                     maxLength: {
-                      value: 20,
+                      value: 100,
                       message: "Food Name cannot be too long",
                     },
                   })}
@@ -110,7 +142,8 @@ const ChefCreateMeal = () => {
                   type="number"
                   placeholder="Enter Price"
                   {...register("price", {
-                    required: "Price name is required",
+                    required: "Price is required",
+                    min: { value: 1, message: "Price must be positive" },
                   })}
                   error={errors.price}
                 />
@@ -209,7 +242,7 @@ const ChefCreateMeal = () => {
                 {...register("chefExperience", {
                   required: "Chef's experience is required",
                   maxLength: {
-                    value: 30,
+                    value: 100,
                     message: "Chef's experience cannot be too long",
                   },
                 })}
@@ -218,11 +251,16 @@ const ChefCreateMeal = () => {
             </div>
             {/* submite button */}
             <CustomButton>
-              <span>
-                <Utensils size={16} />
-              </span>
-              Create Meal
+              {isPending ? (
+                <TbFidgetSpinner className=" animate-spin m-auto" />
+              ) : (
+                <span className="flex justify-center items-center gap-2">
+                  <Utensils size={16} />
+                  Create Meal
+                </span>
+              )}
             </CustomButton>
+            {isError && <p className="text-red-500">Something went wrong!</p>}
           </form>
         </div>
       </motion.div>
