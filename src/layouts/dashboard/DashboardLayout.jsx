@@ -14,7 +14,7 @@ const DashboardLayout = () => {
   }, [location.pathname, setOpen]);
   return (
     <>
-      <div className="min-h-screen flex bg-muted/3">
+      <div className="min-h-screen flex ">
         {/* Desktop Sidebar */}
         <Sidebar isMobile={false} />
 

@@ -1,5 +1,4 @@
 import { Outlet } from "react-router";
-import Container from "../../components/container/Container";
 import Navber from "../../components/shared/navber/Navber";
 import Footer from "../../components/shared/footer/Footer";
 import { Bounce, ToastContainer } from "react-toastify";
@@ -13,9 +12,9 @@ const MainLayout = () => {
         <Navber></Navber>
         {/* outlate */}
         <div className="flex-1">
-          <Container>
+        
             <Outlet></Outlet>
-          </Container>
+          
         </div>
         {/* footer */}
         <Footer></Footer>
