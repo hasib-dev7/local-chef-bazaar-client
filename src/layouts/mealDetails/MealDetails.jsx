@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import CustomButton from "../../components/ui/CustomButton";
+import CustomerReviewsForm from "../../pages/customerReviews/CustomerReviewsForm";
+import CustomerReviewsCard from "../../pages/customerReviews/CustomerReviewsCard";
 const MealDetails = () => {
   const { id } = useParams();
   const { data: meals = [], isLoading } = useQuery({
@@ -35,132 +37,147 @@ const MealDetails = () => {
   return (
     <>
       <Container>
-        <Link to="/meals" className="flex items-center gap-2 mt-5 lg:mt-10">
-          <MoveLeft size={20} color="#000000" />
-          <span className="text-lg text-black/80 hover:text-black transition-all">Back to Meals</span>
-        </Link>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 my-6">
-          {/* Image wrapper */}
-          <div className="w-full h-96 lg:h-[600px] overflow-hidden rounded-2xl relative ">
-            <img
-              className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-108"
-              src={meals.imageURL}
-              alt={meals.foodName}
-            />
-            {/* rating */}
-            <div className="flex justify-center items-center gap-1 px-3 py-1 bg-[#7e6f67] rounded-2xl absolute top-3 right-3">
-              <span>
-                <Star size={16} color="#ffd500" />
-              </span>
-              <span className="text-black">0.5</span>
+        {/* customer card section */}
+        <section className="pt-5 md:pt-8 lg:pt-12">
+          <Link to="/meals" className="flex items-center gap-2">
+            <MoveLeft size={20} color="#000000" />
+            <span className="text-lg text-black/80 hover:text-black transition-all">
+              Back to Meals
+            </span>
+          </Link>
+          {/* left side image */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-6">
+            {/* Image wrapper */}
+            <div className="w-full h-96 lg:h-[600px] overflow-hidden rounded-2xl relative ">
+              <img
+                className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-108"
+                src={meals.imageURL}
+                alt={meals.foodName}
+              />
+              {/* rating */}
+              <div className="flex justify-center items-center gap-1 px-3 py-1 bg-[#7e6f67] rounded-2xl absolute top-3 right-3">
+                <span>
+                  <Star size={16} color="#ffd500" />
+                </span>
+                <span className="text-black">0.5</span>
+              </div>
             </div>
-          </div>
-          {/* card text details */}
-          <div className=" space-y-5">
-            <div>
-              <h2 className="text-secondary hover:text-primary font-semibold text-xl md:text-2xl lg:text-4xl transition-colors line-clamp-1">
-                {meals.foodName}
-              </h2>
+            {/* right side  card text details */}
+            <div className=" space-y-5">
+              
+                <h2 className="text-secondary hover:text-primary font-semibold text-xl md:text-2xl lg:text-4xl transition-colors line-clamp-1">
+                  {meals.foodName}
+                </h2>
+                
+              
               <div className="flex items-center gap-4 ">
-                <p className="flex items-center gap-2">
-                  <ChefHat size={16} color="#11d46f" />
-                  <span className="text-[#7e6f67] text-sm">
-                    {meals.chefName}
+                  <p className="flex items-center gap-2">
+                    <ChefHat size={16} color="#11d46f" />
+                    <span className="text-[#7e6f67] text-sm">
+                      {meals.chefName}
+                    </span>
+                  </p>
+                  <p className="bg-white/90 text-sm text-secondary px-5 py-1 rounded-2xl shadow">
+                    ID:chef id
+                  </p>
+                </div>
+              {/* price */}
+              <p className="text-primary text-xl lg:text-4xl font-bold ">
+                $ {meals.price}
+              </p>
+              {/*  */}
+              <div className="bg-white p-5 shadow rounded-xl  space-y-4">
+                {/* Delivery Time */}
+                <div className="flex items-center gap-4">
+                  <span className="p-2 bg-orange-100 rounded-full">
+                    <Clock5 size={22} color="#f98c10" />
                   </span>
-                </p>
-                <p className="bg-white/90 text-sm text-secondary px-5 py-1 rounded-2xl shadow">
-                  ID:chef id
-                </p>
-              </div>
-            </div>
-            {/* price */}
-            <p className="text-primary text-xl lg:text-4xl font-bold ">
-              $ {meals.price}
-            </p>
-            {/*  */}
-            <div className="bg-white p-5 shadow rounded-xl  space-y-4">
-              {/* Delivery Time */}
-              <div className="flex items-center gap-4">
-                <span className="p-2 bg-orange-100 rounded-full">
-                  <Clock5 size={22} color="#f98c10" />
-                </span>
-                <div>
-                  <p className="text-[#7e6f67]">Delivery Time</p>
-                  <p className="flex items-center gap-2">
-                    <span className="text-secondary font-semibold text-sm">
-                      {meals.deliveryTime}
-                    </span>
-                  </p>
-                </div>
-              </div>
-              {/* Delivery Area */}
-              <div className="flex items-center gap-4">
-                <span className="p-2 bg-orange-100 rounded-full">
-                  <MapPin size={22} color="#f98c10" />
-                </span>
-                <div>
-                  <p className="text-[#7e6f67]">Delivery Area</p>
-                  <p className="flex items-center gap-2">
-                    <span className="text-secondary font-semibold text-sm">
-                      Location
-                    </span>
-                  </p>
-                </div>
-              </div>
-              {/* Chef Experience */}
-              <div className="flex items-center gap-4">
-                <span className="p-2 bg-orange-100 rounded-full">
-                  <ChefHat size={22} color="#f98c10" />
-                </span>
-                <div>
-                  <p className="text-[#7e6f67]">Chef Experience</p>
-                  <p className="flex items-center gap-2">
-                    <span className="text-secondary font-semibold text-sm">
-                      {meals.chefExperience}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Ingredients */}
-            <div>
-              <h2 className="text-lg text-secondary  font-semibold">
-                Ingredients
-              </h2>
-              <div className="flex flex-wrap gap-4 mt-3">
-                {ingredientsArray?.map((item, index) => (
-                  <div
-                    key={index}
-                    className="bg-[#37ae63] text-white border rounded-xl px-4 py-1"
-                  >
-                    {item}
+                  <div>
+                    <p className="text-[#7e6f67]">Delivery Time</p>
+                    <p className="flex items-center gap-2">
+                      <span className="text-secondary font-semibold text-sm">
+                        {meals.deliveryTime}
+                      </span>
+                    </p>
                   </div>
-                ))}
-              </div>
-            </div>
-            {/*  button */}
-            <div className="w-full grid  grid-cols-6 gap-4">
-              {/* order button */}
-              <div className="col-span-3 lg:col-span-4">
-                <CustomButton>
-                  <span className="flex justify-center items-center gap-2">
-                    <ShoppingCart size={16} color="#ffffff" />
-                    Order Now
+                </div>
+                {/* Delivery Area */}
+                <div className="flex items-center gap-4">
+                  <span className="p-2 bg-orange-100 rounded-full">
+                    <MapPin size={22} color="#f98c10" />
                   </span>
-                </CustomButton>
-              </div>
-              {/* favorite button */}
-              <div className="col-span-3 lg:col-span-2">
-                <button className="w-full  flex justify-center items-center gap-2 px-3 py-2 rounded-lg outline-0 border shadow">
-                  <span>
-                    <Heart size={16} color="#000000" />
+                  <div>
+                    <p className="text-[#7e6f67]">Delivery Area</p>
+                    <p className="flex items-center gap-2">
+                      <span className="text-secondary font-semibold text-sm">
+                        Location
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                {/* Chef Experience */}
+                <div className="flex items-center gap-4">
+                  <span className="p-2 bg-orange-100 rounded-full">
+                    <ChefHat size={22} color="#f98c10" />
                   </span>
-                  <span>Favorite</span>
-                </button>
+                  <div>
+                    <p className="text-[#7e6f67]">Chef Experience</p>
+                    <p className="flex items-center gap-2">
+                      <span className="text-secondary font-semibold text-sm">
+                        {meals.chefExperience}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {/* Ingredients */}
+              <div>
+                <h2 className="text-lg text-secondary  font-semibold">
+                  Ingredients
+                </h2>
+                <div className="flex flex-wrap gap-4 mt-3">
+                  {ingredientsArray?.map((item, index) => (
+                    <div
+                      key={index}
+                      className="bg-[#37ae63] text-white border rounded-xl px-4 py-1"
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/*  button */}
+              <div className="w-full grid  grid-cols-6 gap-4">
+                {/* order button */}
+                <div className="col-span-3 lg:col-span-4">
+                  <CustomButton>
+                    <span className="flex justify-center items-center gap-2">
+                      <ShoppingCart size={16} color="#ffffff" />
+                      Order Now
+                    </span>
+                  </CustomButton>
+                </div>
+                {/* favorite button */}
+                <div className="col-span-3 lg:col-span-2">
+                  <button className="w-full  flex justify-center items-center gap-2 px-3 py-2 rounded-lg outline-0 border shadow">
+                    <span>
+                      <Heart size={16} color="#000000" />
+                    </span>
+                    <span>Favorite</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
+        {/* customer reviews form */}
+        <section className="pt-5 md:pt-8 lg:pt-10">
+          <CustomerReviewsForm></CustomerReviewsForm>
+        </section>
+        {/* customer reviews card */}
+        <section className="pb-5 md:pb-8 lg:pb-10 pt-4 md:pt-6 lg:pt-5">
+         <CustomerReviewsCard></CustomerReviewsCard>
+        </section>
       </Container>
     </>
   );

@@ -19,6 +19,7 @@ import AdminManageUser from "../pages/dashboard/admin/manageUser/AdminManageUser
 import AdminManageRequest from "../pages/dashboard/admin/manageRequest/AdminManageRequest";
 import AdminPlatformStatistics from "../pages/dashboard/admin/platformStatistics/AdminPlatformStatistics";
 import MealDetails from "../layouts/mealDetails/MealDetails";
+import OrderForm from "../pages/orderPage/OrderForm";
 
 export const routes = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const routes = createBrowserRouter([
       {
         path: "meal-details/:id",
         element: <MealDetails></MealDetails>,
+      },
+      {
+        path:"order-form",
+        element:<OrderForm></OrderForm>
       },
       // login and register pages
       {
