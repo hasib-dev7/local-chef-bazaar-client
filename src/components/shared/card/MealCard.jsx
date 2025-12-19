@@ -44,7 +44,7 @@ const MealCard = ({ meal }) => {
           </p>
           <div className="divider"></div>
           <div className="flex justify-between items-center pb-5">
-            <p className="text-primary text-xl font-bold">$ {price}</p>
+            <p className="text-primary text-xl font-bold">৳ {price}</p>
             <Link
               to={`/meal-details/${_id}`}
               className="text-sm font-medium px-6 py-3 rounded-lg text-white bg-primary "

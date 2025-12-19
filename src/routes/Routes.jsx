@@ -39,7 +39,7 @@ export const routes = createBrowserRouter([
         element: <MealDetails></MealDetails>,
       },
       {
-        path:"order-form",
+        path:"order-form/:id",
         element:<OrderForm></OrderForm>
       },
       // login and register pages

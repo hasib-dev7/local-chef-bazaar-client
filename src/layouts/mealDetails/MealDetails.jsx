@@ -29,10 +29,10 @@ const MealDetails = () => {
       return result.data;
     },
   });
-
+// ingredients array
   if (isLoading) return <LoadingSpinner />;
   const ingredientsArray = meals.ingredients?.[0]?.split("\n");
-  console.log(ingredientsArray);
+ 
 
   return (
     <>
@@ -64,23 +64,21 @@ const MealDetails = () => {
             </div>
             {/* right side  card text details */}
             <div className=" space-y-5">
-              
-                <h2 className="text-secondary hover:text-primary font-semibold text-xl md:text-2xl lg:text-4xl transition-colors line-clamp-1">
-                  {meals.foodName}
-                </h2>
-                
-              
+              <h2 className="text-secondary hover:text-primary font-semibold text-xl md:text-2xl lg:text-4xl transition-colors line-clamp-1">
+                {meals.foodName}
+              </h2>
+
               <div className="flex items-center gap-4 ">
-                  <p className="flex items-center gap-2">
-                    <ChefHat size={16} color="#11d46f" />
-                    <span className="text-[#7e6f67] text-sm">
-                      {meals.chefName}
-                    </span>
-                  </p>
-                  <p className="bg-white/90 text-sm text-secondary px-5 py-1 rounded-2xl shadow">
-                    ID:chef id
-                  </p>
-                </div>
+                <p className="flex items-center gap-2">
+                  <ChefHat size={16} color="#11d46f" />
+                  <span className="text-[#7e6f67] text-sm">
+                    {meals.chefName}
+                  </span>
+                </p>
+                <p className="bg-white/90 text-sm text-secondary px-5 py-1 rounded-2xl shadow">
+                  ID:chef id
+                </p>
+              </div>
               {/* price */}
               <p className="text-primary text-xl lg:text-4xl font-bold ">
                 $ {meals.price}
@@ -147,10 +145,10 @@ const MealDetails = () => {
                 </div>
               </div>
               {/*  button */}
-              <div className="w-full grid  grid-cols-6 gap-4">
+              <Link to={`/order-form/${meals._id}`} className="w-full grid  grid-cols-6 gap-4">
                 {/* order button */}
                 <div className="col-span-3 lg:col-span-4">
-                  <CustomButton>
+                  <CustomButton >
                     <span className="flex justify-center items-center gap-2">
                       <ShoppingCart size={16} color="#ffffff" />
                       Order Now
@@ -166,7 +164,7 @@ const MealDetails = () => {
                     <span>Favorite</span>
                   </button>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </section>
@@ -176,7 +174,7 @@ const MealDetails = () => {
         </section>
         {/* customer reviews card */}
         <section className="pb-5 md:pb-8 lg:pb-10 pt-4 md:pt-6 lg:pt-5">
-         <CustomerReviewsCard></CustomerReviewsCard>
+          <CustomerReviewsCard></CustomerReviewsCard>
         </section>
       </Container>
     </>

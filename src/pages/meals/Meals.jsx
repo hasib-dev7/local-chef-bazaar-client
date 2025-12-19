@@ -13,7 +13,6 @@ const Meals = () => {
     },
   });
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
-  console.log(meals);
   return (
     <>
       <div className=" bg-linear-to-r from-[#f9ecdd] to-[#e6f0e6] py-8 lg:py-16">
