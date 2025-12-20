@@ -58,7 +58,7 @@ const Register = () => {
       toast.success("Registered successfully!");
       navigate(location?.state || "/");
     } catch (err) {
-      console.log(err.code); // Firebase error code
+    
       if (err.code === "auth/email-already-in-use") {
         toast.error("This email is already registered");
       } else {

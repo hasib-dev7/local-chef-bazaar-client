@@ -24,7 +24,7 @@ const OrderForm = () => {
     },
   });
   if (isLoading) return <LoadingSpinner />;
-  console.log(meals);
+  // console.log(meals);
   const totalPrice = meals.price * quantity;
   //   animation
   const cardVariants = {
@@ -36,7 +36,7 @@ const OrderForm = () => {
       transition: { duration: 0.6, ease: "easeOut" },
     },
   };
-  console.log("user address", userAddress);
+  // console.log("user address", userAddress);
   return (
     <>
       <Container>

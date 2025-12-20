@@ -8,22 +8,21 @@ import { Utensils } from "lucide-react";
 import useAuth from "../../../../hooks/useAuth";
 import Textarea from "../../../../components/ui/Textarea";
 import { imageUpload } from "../../../../utils/imageUpload";
-import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { TbFidgetSpinner } from "react-icons/tb";
 import { toast } from "react-toastify";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 const ChefCreateMeal = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const axiosSecure = useAxiosSecure();
   const {
     isPending,
     isError,
     mutateAsync,
     reset: mutationReset,
   } = useMutation({
-    mutationFn: async (payload) =>
-      await axios.post(`${import.meta.env.VITE_API_URL}/meals`, payload),
+    mutationFn: async (payload) => await axiosSecure.post("/meals", payload),
     onSuccess: () => {
       toast.success("meals Added successfully");
       // invalidateQueries
@@ -224,10 +223,6 @@ const ChefCreateMeal = () => {
                 placeholder="e.g., Rice, Chicken, Spices, Yogurt"
                 {...register("ingredients", {
                   required: "Ingredients is required",
-                  maxLength: {
-                    value: 150,
-                    message: "Ingredients cannot be too long",
-                  },
                 })}
                 error={errors.ingredients}
               ></Textarea>

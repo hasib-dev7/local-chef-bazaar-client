@@ -39,6 +39,7 @@ const Meals = () => {
           </div>
         ) : null}
       </Container>
+     
     </>
   );
 };

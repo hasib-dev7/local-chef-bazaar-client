@@ -29,8 +29,8 @@ const MealDetails = () => {
       return result.data;
     },
   });
-// ingredients array
   if (isLoading) return <LoadingSpinner />;
+  // ingredients array
   const ingredientsArray = meals.ingredients?.[0]?.split("\n");
  
 
