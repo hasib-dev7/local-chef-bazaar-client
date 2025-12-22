@@ -4,15 +4,19 @@ import { Link, useParams } from "react-router";
 import Container from "../../components/container/Container";
 import { MoveLeft } from "lucide-react";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "../../components/shared/spinner/LoadingSpinner";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure.jsx";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const OrderForm = () => {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [userAddress, setUserAddress] = useState("");
+  const [userAddressError, setUserAddressError] = useState("");
   const { user } = useAuth();
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals", id],
@@ -23,8 +27,19 @@ const OrderForm = () => {
       return result.data;
     },
   });
-  if (isLoading) return <LoadingSpinner />;
-  // console.log(meals);
+
+  // confirm order
+  const queryClient = useQueryClient();
+  const axiosSecure = useAxiosSecure();
+  const { mutateAsync, reset: mutationReset } = useMutation({
+    mutationFn: async (payload) => await axiosSecure.post("/orders", payload),
+    onSuccess: () => {
+      // invalidateQueries
+      queryClient.invalidateQueries(["orders"]);
+      //
+      mutationReset();
+    },
+  });
   const totalPrice = meals.price * quantity;
   //   animation
   const cardVariants = {
@@ -36,7 +51,73 @@ const OrderForm = () => {
       transition: { duration: 0.6, ease: "easeOut" },
     },
   };
-  // console.log("user address", userAddress);
+
+  // confirm order button
+  const handleConfirmOrder = async () => {
+    // user address validation
+    if (!userAddress.trim()) {
+      setUserAddressError("Delivery address is required");
+      return;
+    }
+    setUserAddressError("");
+
+    const paymentInfo = {
+      foodId: meals._id,
+      foodName: meals.foodName,
+      chefName: meals.chefName,
+      image: meals.image,
+      price: meals.price,
+      chef_email: meals.chef_email,
+      totalPrice: totalPrice,
+      quantity: quantity,
+      chefId: meals.chefID,
+      paymentStatus: "pending",
+      customer: {
+        name: user?.displayName,
+        email: user?.email,
+        photo: user?.photoURL,
+        address: userAddress,
+      },
+      orderStatus: "pending",
+    };
+
+    Swal.fire({
+      title: `Confirm Your Order`,
+      text: `Your total price is ৳${totalPrice}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, place order!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await mutateAsync(paymentInfo); // save order to DB
+
+          // ✅ Success Toast / SweetAlert
+          Swal.fire({
+            title: "Order Placed Successfully!",
+            text: `You ordered ${paymentInfo.quantity} x ${paymentInfo.foodName}`,
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+        } catch (error) {
+          Swal.fire({
+            title: "Error!",
+            text: error?.response?.data?.error || "Failed to place order",
+            icon: "error",
+          });
+        }
+      }
+    });
+  };
+
+  // order data save to db
+  // await mutateAsync(paymentInfo);
+  // window.location.href = data.url;
+  // console.log(data);
+
+  if (isLoading) return <LoadingSpinner />;
   return (
     <>
       <Container>
@@ -113,15 +194,24 @@ const OrderForm = () => {
               </div>
               {/* Delivery Address */}
               <div class="space-y-2">
-                <p className="text-sm font-medium text-secondary">Your Email</p>
+                <p className="text-sm font-medium text-secondary">
+                  Delivery Address
+                </p>
                 <textarea
                   required
                   value={userAddress}
-                  onChange={(e) => setUserAddress(e.target.value)}
+                  onChange={(e) => {
+                    setUserAddress(e.target.value);
+                    setUserAddressError("");
+                  }}
                   rows={2}
                   placeholder="Enter delivery address"
                   className="w-full  px-3 py-2 rounded-lg bg-[#f3f1ed] border border-[#f3f1ed] text-gray-700"
                 ></textarea>
+
+                {userAddressError && (
+                  <p className="text-red-500 text-sm">{userAddressError}</p>
+                )}
               </div>
             </motion.div>
             {/* right */}
@@ -155,6 +245,7 @@ const OrderForm = () => {
                 </div>
 
                 <button
+                  onClick={handleConfirmOrder}
                   // onClick={handleConfirmOrder}
                   className="mt-6 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl"
                 >

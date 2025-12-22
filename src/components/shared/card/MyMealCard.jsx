@@ -1,12 +1,12 @@
 import { ChefHat, Clock5, Pencil, Star, Trash2 } from "lucide-react";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAxiosSecure from "../../../hooks/useAxiosSecure.jsx";
 import { useState } from "react";
 import UpdateModal from "../../dashboard/modal/UpdateModal";
 const MyMealCard = ({ myMeal, refetch }) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const { imageURL, foodName, deliveryTime, price, _id, chefName } = myMeal;
+  const { image, foodName, deliveryTime, price, _id, chefName } = myMeal;
   // ingredients array
   const ingredientsArray = myMeal.ingredients?.[0]?.split("\n");
 
@@ -47,7 +47,7 @@ const MyMealCard = ({ myMeal, refetch }) => {
         <div className="w-full h-60 md:h-64 lg:h-72 overflow-hidden rounded-t-2xl relative">
           <img
             className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-108"
-            src={imageURL}
+            src={image}
             alt={foodName}
           />
 

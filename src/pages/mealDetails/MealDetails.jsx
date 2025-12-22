@@ -16,8 +16,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import CustomButton from "../../components/ui/CustomButton";
-import CustomerReviewsForm from "../../pages/customerReviews/CustomerReviewsForm";
-import CustomerReviewsCard from "../../pages/customerReviews/CustomerReviewsCard";
+import CustomerReviewsForm from "../customerReviews/CustomerReviewsForm";
+import CustomerReviewsCard from "../customerReviews/CustomerReviewsCard";
 const MealDetails = () => {
   const { id } = useParams();
   const { data: meals = [], isLoading } = useQuery({
@@ -32,7 +32,6 @@ const MealDetails = () => {
   if (isLoading) return <LoadingSpinner />;
   // ingredients array
   const ingredientsArray = meals.ingredients?.[0]?.split("\n");
- 
 
   return (
     <>
@@ -51,7 +50,7 @@ const MealDetails = () => {
             <div className="w-full h-96 lg:h-[600px] overflow-hidden rounded-2xl relative ">
               <img
                 className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-108"
-                src={meals.imageURL}
+                src={meals.image}
                 alt={meals.foodName}
               />
               {/* rating */}
@@ -145,10 +144,13 @@ const MealDetails = () => {
                 </div>
               </div>
               {/*  button */}
-              <Link to={`/order-form/${meals._id}`} className="w-full grid  grid-cols-6 gap-4">
+              <Link
+                to={`/order-form/${meals._id}`}
+                className="w-full grid  grid-cols-6 gap-4"
+              >
                 {/* order button */}
                 <div className="col-span-3 lg:col-span-4">
-                  <CustomButton >
+                  <CustomButton>
                     <span className="flex justify-center items-center gap-2">
                       <ShoppingCart size={16} color="#ffffff" />
                       Order Now
@@ -170,11 +172,11 @@ const MealDetails = () => {
         </section>
         {/* customer reviews form */}
         <section className="pt-5 md:pt-8 lg:pt-10">
-          <CustomerReviewsForm></CustomerReviewsForm>
+          <CustomerReviewsForm  meals={ meals}></CustomerReviewsForm>
         </section>
         {/* customer reviews card */}
         <section className="pb-5 md:pb-8 lg:pb-10 pt-4 md:pt-6 lg:pt-5">
-          <CustomerReviewsCard></CustomerReviewsCard>
+          <CustomerReviewsCard id={meals._id}></CustomerReviewsCard>
         </section>
       </Container>
     </>

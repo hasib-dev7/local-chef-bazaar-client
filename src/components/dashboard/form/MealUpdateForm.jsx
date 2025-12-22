@@ -6,7 +6,7 @@ import Label from "../../ui/Label";
 import Textarea from "../../ui/Textarea";
 import Input from "../../ui/Input";
 import CustomButton from "../../ui/CustomButton";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAxiosSecure from "../../../hooks/useAxiosSecure.jsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { Utensils } from "lucide-react";
@@ -18,6 +18,7 @@ const MealUpdateForm = ({ updateMeal, setIsUpdateModalOpen }) => {
   const {
     isPending,
     isError,
+    
     mutateAsync,
     reset: mutationReset,
   } = useMutation({
@@ -60,7 +61,7 @@ const MealUpdateForm = ({ updateMeal, setIsUpdateModalOpen }) => {
         foodName,
         price: Number(price),
         deliveryTime,
-        imageURL,
+        image: imageURL,
         ingredients: ingredientsArray,
         chefExperience,
       };

@@ -12,9 +12,7 @@ const MainLayout = () => {
         <Navber></Navber>
         {/* outlate */}
         <div className="flex-1">
-        
-            <Outlet></Outlet>
-          
+          <Outlet></Outlet>
         </div>
         {/* footer */}
         <Footer></Footer>

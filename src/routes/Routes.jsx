@@ -18,8 +18,9 @@ import AdminMyProfile from "../pages/dashboard/admin/myProfile/AdminMyProfile";
 import AdminManageUser from "../pages/dashboard/admin/manageUser/AdminManageUser";
 import AdminManageRequest from "../pages/dashboard/admin/manageRequest/AdminManageRequest";
 import AdminPlatformStatistics from "../pages/dashboard/admin/platformStatistics/AdminPlatformStatistics";
-import MealDetails from "../layouts/mealDetails/MealDetails";
+import MealDetails from "../pages/mealDetails/MealDetails";
 import OrderForm from "../pages/orderPage/OrderForm";
+import PaymentSuccess from "../pages/payment/PaymentSuccess";
 
 export const routes = createBrowserRouter([
   {
@@ -39,8 +40,8 @@ export const routes = createBrowserRouter([
         element: <MealDetails></MealDetails>,
       },
       {
-        path:"order-form/:id",
-        element:<OrderForm></OrderForm>
+        path: "order-form/:id",
+        element: <OrderForm></OrderForm>,
       },
       // login and register pages
       {
@@ -50,6 +51,11 @@ export const routes = createBrowserRouter([
       {
         path: "register",
         element: <Register></Register>,
+      },
+      // payment pages
+      {
+        path: "payment-success",
+        element: <PaymentSuccess></PaymentSuccess>,
       },
     ],
   },

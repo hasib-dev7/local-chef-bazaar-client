@@ -11,7 +11,7 @@ import { imageUpload } from "../../../../utils/imageUpload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { toast } from "react-toastify";
-import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure.jsx";
 const ChefCreateMeal = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -63,9 +63,10 @@ const ChefCreateMeal = () => {
         chefName,
         price: Number(price),
         deliveryTime,
-        email,
+        chef_email: email,
+        chef_image: user?.photoURL,
         chefID,
-        imageURL,
+        image: imageURL,
         ingredients: ingredientsArray,
         chefExperience,
       };
@@ -233,7 +234,7 @@ const ChefCreateMeal = () => {
               <Textarea
                 id="chefExperience"
                 type="text"
-                placeholder="e.g., Rice, Chicken, Spices, Yogurt"
+                placeholder="Your Chef's experience"
                 {...register("chefExperience", {
                   required: "Chef's experience is required",
                   maxLength: {

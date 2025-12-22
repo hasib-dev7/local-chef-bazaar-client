@@ -18,7 +18,7 @@ const Meals = () => {
       <div className=" bg-linear-to-r from-[#f9ecdd] to-[#e6f0e6] py-8 lg:py-16">
         <Container>
           <div className="w-full lg:w-6/12 mx-auto text-center py-5">
-            <h1 class="text-4xl md:text-5xl font-display font-bold text-secondary mb-4">
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-secondary mb-4">
               Discover <span class="text-primary">Delicious</span> Meals
             </h1>
             <p className="text-[#7e6f67]">
@@ -39,7 +39,6 @@ const Meals = () => {
           </div>
         ) : null}
       </Container>
-     
     </>
   );
 };

@@ -4,7 +4,7 @@ import { ChefHat, Clock5, MapPin, Star } from "lucide-react";
 import { Link } from "react-router";
 
 const MealCard = ({ meal }) => {
-  const { imageURL, foodName, chefName, deliveryTime, price, _id } = meal;
+  const { image, foodName, chefName, deliveryTime, price, _id } = meal;
   return (
     <>
       <div className="w-full bg-white   cursor-pointe rounded-2xl">
@@ -12,7 +12,7 @@ const MealCard = ({ meal }) => {
         <div className="w-full h-60 md:h-64 lg:h-72 overflow-hidden rounded-t-2xl relative">
           <img
             className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-108"
-            src={imageURL}
+            src={image}
             alt={foodName}
           />
          

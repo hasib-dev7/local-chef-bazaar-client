@@ -1,17 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../../hooks/useAuth";
-import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure.jsx";
 import LoadingSpinner from "../../../../components/shared/spinner/LoadingSpinner";
-import MealCard from "../../../../components/shared/card/MealCard";
 import MyMealCard from "../../../../components/shared/card/MyMealCard";
 
 const ChefMyMeals = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const { data: meals = {}, isLoading,refetch } = useQuery({
+  const {
+    data: meals = {},
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["inventory", user?.email],
     queryFn: async () => {
-      const result = await axiosSecure.get(`my-meals/${user?.email}`);
+      const result = await axiosSecure.get(`/my-meals/${user?.email}`);
       return result.data;
     },
   });
