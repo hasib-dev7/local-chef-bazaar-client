@@ -13,7 +13,6 @@ const CustomerReviewsCard = ({ id }) => {
   });
 
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
-  console.log(reviews);
   return (
     <>
       {reviews.map((review) => (

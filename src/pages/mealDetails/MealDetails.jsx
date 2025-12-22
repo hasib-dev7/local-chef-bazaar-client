@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Container from "../../components/container/Container";
 import axios from "axios";
 import { useParams } from "react-router";
@@ -18,8 +18,14 @@ import { Link } from "react-router";
 import CustomButton from "../../components/ui/CustomButton";
 import CustomerReviewsForm from "../customerReviews/CustomerReviewsForm";
 import CustomerReviewsCard from "../customerReviews/CustomerReviewsCard";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { toast } from "react-toastify";
+import useAuth from "../../hooks/useAuth";
 const MealDetails = () => {
   const { id } = useParams();
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals", id],
     queryFn: async () => {
@@ -29,10 +35,38 @@ const MealDetails = () => {
       return result.data;
     },
   });
+  // favorite collection
+  const {
+    mutateAsync,
+    reset: mutationReset,
+    refetch,
+  } = useMutation({
+    mutationFn: async (payload) => await axiosSecure.post("/favorite", payload),
+    onSuccess: () => {
+      // invalidateQueries
+      queryClient.invalidateQueries(["favorites"]);
+      toast.success("Meal added to favorites successfully!");
+      //
+      mutationReset();
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+  const handleFavorite = async (meal) => {
+    const favoriteInfo = {
+      userEmail: user?.email,
+      mealId: meal._id,
+      mealName: meal.foodName,
+      chefID: meal.chefID,
+      chefName: meal.chefName,
+      price: meal.price,
+    };
+    await mutateAsync(favoriteInfo);
+  };
   if (isLoading) return <LoadingSpinner />;
   // ingredients array
   const ingredientsArray = meals.ingredients?.[0]?.split("\n");
-
   return (
     <>
       <Container>
@@ -144,21 +178,24 @@ const MealDetails = () => {
                 </div>
               </div>
               {/*  button */}
-              <Link
-                to={`/order-form/${meals._id}`}
-                className="w-full grid  grid-cols-6 gap-4"
-              >
+              <div className="w-full grid  grid-cols-6 gap-4">
                 {/* order button */}
-                <div className="col-span-3 lg:col-span-4">
+                <Link
+                  to={`/order-form/${meals._id}`}
+                  className="col-span-3 lg:col-span-4"
+                >
                   <CustomButton>
                     <span className="flex justify-center items-center gap-2">
                       <ShoppingCart size={16} color="#ffffff" />
                       Order Now
                     </span>
                   </CustomButton>
-                </div>
+                </Link>
                 {/* favorite button */}
-                <div className="col-span-3 lg:col-span-2">
+                <div
+                  onClick={() => handleFavorite(meals)}
+                  className="col-span-3 lg:col-span-2"
+                >
                   <button className="w-full  flex justify-center items-center gap-2 px-3 py-2 rounded-lg outline-0 border shadow">
                     <span>
                       <Heart size={16} color="#000000" />
@@ -166,13 +203,13 @@ const MealDetails = () => {
                     <span>Favorite</span>
                   </button>
                 </div>
-              </Link>
+              </div>
             </div>
           </div>
         </section>
         {/* customer reviews form */}
         <section className="pt-5 md:pt-8 lg:pt-10">
-          <CustomerReviewsForm  meals={ meals}></CustomerReviewsForm>
+          <CustomerReviewsForm meals={meals}></CustomerReviewsForm>
         </section>
         {/* customer reviews card */}
         <section className="pb-5 md:pb-8 lg:pb-10 pt-4 md:pt-6 lg:pt-5">
