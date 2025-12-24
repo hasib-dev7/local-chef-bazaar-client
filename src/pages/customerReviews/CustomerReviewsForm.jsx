@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
-import Label from "../../components/ui/Label";
 import Input from "../../components/ui/Input";
 import { toast } from "react-toastify";
 const CustomerReviewsForm = ({ meals }) => {
@@ -35,16 +34,17 @@ const CustomerReviewsForm = ({ meals }) => {
     const { reviews, rating } = data;
     const reviewInfo = {
       reviews,
-      rating,
+      rating: Number(rating),
+      mealName: meals.foodName,
       foodId: meals._id,
       reviewerName: user?.displayName,
       reviewerImage: user?.photoURL,
       email: user?.email,
     };
-    await mutateAsync(reviewInfo);
-    refetch();
     // reset form data
     reset();
+    await mutateAsync(reviewInfo);
+    refetch();
   };
   return (
     <>
@@ -76,10 +76,16 @@ const CustomerReviewsForm = ({ meals }) => {
                 <Input
                   id="rating"
                   type="number"
-                  placeholder="Enter rating"
+                  placeholder="Enter rating (1-10)"
+                  min={1}
+                  max={10}
                   {...register("rating", {
                     required: "rating is required",
-                    min: { value: 1, message: "rating must be positive" },
+                    min: { value: 1, message: "rating must be at least 1" },
+                    max: {
+                      value: 10,
+                      message: "rating must not be more than 10",
+                    },
                   })}
                   error={errors.rating}
                 />
