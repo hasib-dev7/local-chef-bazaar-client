@@ -1,9 +1,14 @@
+import LoadingSpinner from "../../../components/shared/spinner/LoadingSpinner";
 import TitleLogo from "../../../components/shared/TitleLogo/TitleLogo";
+import useRole from "../../../hooks/useRole";
 import AdminMenu from "../admin/adminMenue/AdminMenu";
 import ChefMenu from "../chef/chefMenue/ChefMenu";
+import ProfileMenu from "../my-profile/profileMenu/ProfileMenu";
 import UserMenu from "../user/userMenu/UserMenu";
 
 const Sidebar = ({ isMobile, onClose }) => {
+  const [role, isLoading] = useRole();
+  if (isLoading) return <LoadingSpinner></LoadingSpinner>;
   return (
     <>
       <aside
@@ -17,9 +22,13 @@ const Sidebar = ({ isMobile, onClose }) => {
 
         {/* Scrollable menu */}
         <div className="flex-1 overflow-y-auto px-2">
-          <UserMenu onClose={onClose} />
+          {/* <UserMenu onClose={onClose} />
           <ChefMenu onClose={onClose} />
-          <AdminMenu onClose={onClose} />
+          <AdminMenu onClose={onClose} /> */}
+          <ProfileMenu></ProfileMenu>
+          {role === "user" && <UserMenu onClose={onClose} />}
+          {role === "chef" && <ChefMenu onClose={onClose} />}
+          {role === "admin" && <AdminMenu onClose={onClose} />}
         </div>
 
         <div className="mt-auto p-4">

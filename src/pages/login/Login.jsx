@@ -7,6 +7,7 @@ import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router";
 import { TbFidgetSpinner } from "react-icons/tb";
+import { saveUserUpdateData } from "../../utils/users";
 const Login = () => {
   const [toggle, setToggle] = useState(false);
   const {
@@ -14,16 +15,25 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signInUser, setUser, authLoading } = useAuth();
+  const { signInUser, setUser, authLoading, user } = useAuth();
   const location = useLocation();
   // console.log("location", location);
   const navigate = useNavigate();
   //   login
   const handleLogin = async (data) => {
     const { email, password } = data;
+
     try {
       const res = await signInUser(email, password);
+      const loginUser = {
+        email: res.user.email,
+        name: res.user.displayName,
+        image: res.user.photoURL,
+      };
+      //  save user role data
+      await saveUserUpdateData(loginUser);
       setUser(res.user);
+      //
       //
       navigate(location?.state || "/");
       // console.log("register data", res);

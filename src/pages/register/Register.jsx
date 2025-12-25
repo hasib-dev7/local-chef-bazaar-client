@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { imageUpload } from "../../utils/imageUpload";
+import { saveUserUpdateData } from "../../utils/users";
 
 const Register = () => {
   const [toggle, setToggle] = useState(false);
@@ -22,24 +23,15 @@ const Register = () => {
     control,
     name: "password",
   });
-  const {
-    setUser,
-    createUser,
-    updateUserProfile,
-    authLoading,
-    
-  } = useAuth();
+  const { setUser, createUser, updateUserProfile, authLoading } = useAuth();
   const location = useLocation();
   // console.log("register navigate", location);
   const navigate = useNavigate();
   //
   const handleRegister = async (data) => {
-    const { email, password, image, name } = data;
+    const { email, password, image, name, address } = data;
     const imageFile = image[0];
     try {
-     
-     
-     
       //  Upload image to imgbb
       const imageURL = await imageUpload(imageFile);
 
@@ -55,10 +47,11 @@ const Register = () => {
 
       //  Set local state
       setUser({ ...signUpUser, displayName: name, photoURL: imageURL });
+      // save user role data
+      saveUserUpdateData({ name, email, image: imageURL, address });
       toast.success("Registered successfully!");
       navigate(location?.state || "/");
     } catch (err) {
-    
       if (err.code === "auth/email-already-in-use") {
         toast.error("This email is already registered");
       } else {
@@ -90,10 +83,7 @@ const Register = () => {
       className="my-10 w-full lg:w-4/12 mx-auto bg-white/80  backdrop-blur-2xl shadow-xl p-8 border border-white/40 rounded-md"
     >
       <div className="flex flex-col items-center ">
-       
-        <h1 className=" text-xl font-bold mt-5 ">
-          Create Account
-        </h1>
+        <h1 className=" text-xl font-bold mt-5 ">Create Account</h1>
         <p className="text-gray-600">Join our community of food lovers</p>
       </div>
       <div>
@@ -184,11 +174,7 @@ const Register = () => {
             <input
               type="text"
               {...register("address", {
-                required: "Name is required",
-                minLength: {
-                  value: 5,
-                  message: " Address must be at least 5 characters",
-                },
+                required: "Address is required",
               })}
               placeholder=" Address"
               className="w-full pl-4 py-3 border border-black/50 rounded-lg outline-none transition focus:border-primaryplaceholder-gray-400"

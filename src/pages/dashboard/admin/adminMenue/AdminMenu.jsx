@@ -1,17 +1,11 @@
-import { BarChart3, ClipboardCheck, User, Users } from "lucide-react";
+import { BarChart3, ClipboardCheck,  Users } from "lucide-react";
 import SidebarLink from "../../sidebar/SidebarLink";
 
 const AdminMenu = ({onClose}) => {
   return (
     <>
-      <div className="px-4 mt-6 text-sm text-gray-500">ADMIN DASHBOARD</div>
+    
       <nav className="mt-2 space-y-1">
-        <SidebarLink
-          to="dashboard/admin-profile"
-          label="My Profile"
-          icon={User}
-          onClick={onClose}
-        />
         <SidebarLink
           to="dashboard/admin-manageUser"
           label="Manage Users"
