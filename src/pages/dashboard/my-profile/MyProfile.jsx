@@ -8,9 +8,9 @@ const MyProfile = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const { data: users, isLoading } = useQuery({
-    queryKey: ["users", user?.email],
+    queryKey: ["user-profile", user?.email],
     queryFn: async () => {
-      const {data} = await axiosSecure.get("/users/role");
+      const { data } = await axiosSecure.get("/user/profile");
       return data;
     },
   });
@@ -18,9 +18,9 @@ const MyProfile = () => {
   return (
     <>
       <div>
-        {
-          users.map(user=><ProfileCard key={user._id} users={user}></ProfileCard>)
-        }
+        {users.map((user) => (
+          <ProfileCard key={user._id} users={user}></ProfileCard>
+        ))}
       </div>
     </>
   );
