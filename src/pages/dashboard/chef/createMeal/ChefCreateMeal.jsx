@@ -17,68 +17,50 @@ const ChefCreateMeal = () => {
   const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
   const {
-    isPending,
-    isError,
     mutateAsync,
+    isPending,
+    // isError,
     reset: mutationReset,
   } = useMutation({
     mutationFn: async (payload) => await axiosSecure.post("/meals", payload),
     onSuccess: () => {
-      toast.success("meals Added successfully");
-      // invalidateQueries
+      toast.success("Meal added successfully ✅");
       queryClient.invalidateQueries(["meals"]);
-      //
       mutationReset();
     },
-    onError: () => {
-      toast.error("Something went wrong!");
+    onError: (error) => {
+      const message = error?.response?.data?.message || "Something went wrong!";
+      toast.error(message);
     },
   });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
-  //
+
   const onSubmit = async (data) => {
-    const {
-      foodName,
-      chefName,
-      price,
-      deliveryTime,
-      email,
-      chefID,
-      image,
-      ingredients,
-      chefExperience,
-    } = data;
-    const imageFile = image[0];
-    // Ingredients clean array
-    const ingredientsArray = ingredients.split(",").map((item) => item.trim());
+    const ingredientsArray = data.ingredients.split(",").map((i) => i.trim());
     try {
-      const imageURL = await imageUpload(imageFile);
-      const mealsData = {
-        foodName,
-        chefName,
-        price: Number(price),
-        deliveryTime,
-        chef_email: email,
+      const imageURL = await imageUpload(data.image[0]);
+      const mealData = {
+        ...data,
+        price: Number(data.price),
+        chef_email: user?.email,
         chef_image: user?.photoURL,
-        chefID,
+        chefID: data.chefID,
         image: imageURL,
         ingredients: ingredientsArray,
-        chefExperience,
       };
-      // meals data sever db
-      await mutateAsync(mealsData);
-      // from reset
+      await mutateAsync(mealData);
       reset();
-    } catch (error) {
-      toast.error(error);
+    } catch (err) {
+      toast.error(err.message || "Failed to upload meal image!");
     }
   };
-  //   animation
+
   const cardVariants = {
     hidden: { opacity: 0, y: 30, scale: 0.98 },
     show: {
@@ -88,179 +70,132 @@ const ChefCreateMeal = () => {
       transition: { duration: 0.6, ease: "easeOut" },
     },
   };
+
+  // Block if chef is fraud
+  const isBlocked = user?.status === "fraud";
+
   return (
-    <>
-      <motion.div
-        variants={cardVariants}
-        initial="hidden"
-        animate="show"
-        className="my-10 w-full lg:w-7/12 mx-auto bg-white/80  backdrop-blur-2xl shadow-xl p-8 border border-white/40 rounded-md"
-      >
-        {/* from heading and paragraph */}
-        <div className="flex flex-col items-center">
-          <h1 className=" text-4xl font-bold mb-5">Create New Meal</h1>
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      animate="show"
+      className="my-10 w-full lg:w-7/12 mx-auto bg-white/80 backdrop-blur-2xl shadow-xl p-8 border border-white/40 rounded-md"
+    >
+      <div className="flex flex-col items-center">
+        <h1 className="text-4xl font-bold mb-5">Create New Meal</h1>
+        {isBlocked && (
+          <p className="text-red-500 font-medium mb-3 text-center">
+            You are blocked and cannot create meals 🚫
+          </p>
+        )}
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="my-5 space-y-4">
+        {/* Food Name & Chef Name */}
+        <div className="grid lg:grid-cols-2 gap-4">
+          <div className="space-y-1 text-sm">
+            <Label htmlFor="foodName">Food Name</Label>
+            <Input
+              id="foodName"
+              placeholder="Enter food name"
+              {...register("foodName", { required: "Food name is required" })}
+              error={errors.foodName}
+            />
+          </div>
+          <div className="space-y-1 text-sm">
+            <Label htmlFor="chefName">Chef Name</Label>
+            <Input
+              id="chefName"
+              value={user?.displayName}
+              {...register("chefName")}
+            />
+          </div>
         </div>
+
+        {/* Price & Delivery Time */}
+        <div className="grid lg:grid-cols-2 gap-4">
+          <div className="space-y-1 text-sm">
+            <Label htmlFor="price">Price</Label>
+            <Input
+              id="price"
+              type="number"
+              placeholder="Enter price"
+              {...register("price", { required: true, min: 1 })}
+              error={errors.price}
+            />
+          </div>
+          <div className="space-y-1 text-sm">
+            <Label htmlFor="deliveryTime">Estimated Delivery Time</Label>
+            <Input
+              id="deliveryTime"
+              placeholder="e.g., 45 minutes"
+              {...register("deliveryTime", { required: true })}
+              error={errors.deliveryTime}
+            />
+          </div>
+        </div>
+
+        {/* Chef ID & Email */}
+        <div className="grid lg:grid-cols-2 gap-4">
+          <div className="space-y-1 text-sm">
+            <Label htmlFor="chefID">Chef ID</Label>
+            <Input id="chefID" {...register("chefID")} />
+          </div>
+          <div className="space-y-1 text-sm">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" value={user?.email} {...register("email")} />
+          </div>
+        </div>
+
+        {/* Image */}
         <div>
-          <form onSubmit={handleSubmit(onSubmit)} className=" my-5 space-y-4">
-            {/* columm 1 */}
-            <div className="grid col-end-1 lg:grid-cols-2 gap-4">
-              {/* Food Name */}
-              <div className="space-y-1 text-sm w-full">
-                <Label htmlFor="foodName">Food Name</Label>
-                <Input
-                  id="foodName"
-                  type="text"
-                  placeholder="Enter food name"
-                  {...register("foodName", {
-                    required: "Food name is required",
-                    maxLength: {
-                      value: 100,
-                      message: "Food Name cannot be too long",
-                    },
-                  })}
-                  error={errors.foodName}
-                />
-              </div>
-              {/* Chef Name */}
-              <div className="space-y-1 text-sm w-full">
-                <Label htmlFor="chefName">Chef Name</Label>
-                <Input
-                  id="chefName"
-                  type="text"
-                  value={user?.displayName}
-                  {...register("chefName")}
-                />
-              </div>
-            </div>
-            {/* columm 2 */}
-            <div className="grid col-end-1 lg:grid-cols-2 gap-4">
-              {/* price */}
-              <div className="space-y-1 text-sm w-full">
-                <Label htmlFor="price">Price</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  placeholder="Enter Price"
-                  {...register("price", {
-                    required: "Price is required",
-                    min: { value: 1, message: "Price must be positive" },
-                  })}
-                  error={errors.price}
-                />
-              </div>
-              {/* Estimated Delivery Time */}
-              <div className="space-y-1 text-sm w-full">
-                <Label htmlFor="deliveryTime">Estimated Delivery Time</Label>
-                <Input
-                  id="deliveryTime"
-                  type="text"
-                  placeholder="e.g., 45 minutes"
-                  {...register("deliveryTime", {
-                    required: "Delivery Time is required",
-                  })}
-                  error={errors.deliveryTime}
-                />
-              </div>
-            </div>
-            {/* columm 3 */}
-            <div className="grid col-end-1 lg:grid-cols-2 gap-4">
-              {/* Chef ID */}
-              <div className="space-y-1 text-sm w-full">
-                <Label htmlFor="chefID">Chef ID</Label>
-                <Input id="chefID" type="text" {...register("chefID")} />
-              </div>
-              {/* Email */}
-              <div className="space-y-1 text-sm w-full">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={user?.email}
-                  {...register("email")}
-                />
-              </div>
-            </div>
-            {/* image */}
-            <div>
-              <label
-                htmlFor="image"
-                className="block mb-2 text-sm font-medium text-gray-700"
-              >
-                Food Image
-              </label>
-              <input
-                name="image"
-                type="file"
-                id="image"
-                accept="image/*"
-                className="block w-full text-sm text-gray-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-md file:border-0
-      file:text-sm file:font-semibold
-      file:bg-orange-50 file:text-primary
-      hover:file:bg-orange-100
-      bg-gray-100 border border-dashed border-orange-300 rounded-md cursor-pointer
-      focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400
-      py-2"
-                {...register("image", {
-                  required: " Food image is required",
-                })}
-              />
-              <p className="mt-1  text-xs text-gray-400">
-                PNG, JPG or JPEG (max 2MB)
-              </p>
-            </div>
-            {errors.image && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.image.message}
-              </p>
-            )}
-            {/*Ingredients */}
-            <div className="space-y-1 text-sm w-full">
-              <Label htmlFor="ingredients">Ingredients (comma separated)</Label>
-              <Textarea
-                id="ingredients"
-                type="text"
-                placeholder="e.g., Rice, Chicken, Spices, Yogurt"
-                {...register("ingredients", {
-                  required: "Ingredients is required",
-                })}
-                error={errors.ingredients}
-              ></Textarea>
-            </div>
-            {/*Chef's Experience */}
-            <div className="space-y-1 text-sm w-full">
-              <Label htmlFor="chefExperience">Chef's Experience</Label>
-              <Textarea
-                id="chefExperience"
-                type="text"
-                placeholder="Your Chef's experience"
-                {...register("chefExperience", {
-                  required: "Chef's experience is required",
-                  maxLength: {
-                    value: 100,
-                    message: "Chef's experience cannot be too long",
-                  },
-                })}
-                error={errors.chefExperience}
-              ></Textarea>
-            </div>
-            {/* submite button */}
-            <CustomButton>
-              {isPending ? (
-                <TbFidgetSpinner className=" animate-spin m-auto" />
-              ) : (
-                <span className="flex justify-center items-center gap-2">
-                  <Utensils size={16} />
-                  Create Meal
-                </span>
-              )}
-            </CustomButton>
-            {isError && <p className="text-red-500">Something went wrong!</p>}
-          </form>
+          <Label htmlFor="image">Food Image</Label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            {...register("image", { required: "Food image is required" })}
+            className="block w-full text-sm text-gray-500 file:py-2 file:px-4 file:rounded-md file:bg-orange-50"
+          />
+          {errors.image && (
+            <p className="text-red-500 text-sm">{errors.image.message}</p>
+          )}
         </div>
-      </motion.div>
-    </>
+
+        {/* Ingredients */}
+        <div className="space-y-1 text-sm">
+          <Label htmlFor="ingredients">Ingredients (comma separated)</Label>
+          <Textarea
+            id="ingredients"
+            placeholder="e.g., Rice, Chicken"
+            {...register("ingredients", { required: "Ingredients required" })}
+            error={errors.ingredients}
+          />
+        </div>
+
+        {/* Chef Experience */}
+        <div className="space-y-1 text-sm">
+          <Label htmlFor="chefExperience">Chef's Experience</Label>
+          <Textarea
+            id="chefExperience"
+            placeholder="Your experience"
+            {...register("chefExperience", { required: true })}
+            error={errors.chefExperience}
+          />
+        </div>
+
+        {/* Submit */}
+        <CustomButton disabled={isBlocked}>
+          {isPending ? (
+            <TbFidgetSpinner className="animate-spin m-auto" />
+          ) : (
+            <span className="flex justify-center items-center gap-2">
+              <Utensils size={16} />
+              Create Meal
+            </span>
+          )}
+        </CustomButton>
+      </form>
+    </motion.div>
   );
 };
 

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Container from "../../components/container/Container";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import LoadingSpinner from "../../components/shared/spinner/LoadingSpinner";
 import {
   ChefHat,
@@ -26,6 +26,8 @@ const MealDetails = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const navigate = useNavigate();
+  // get user email meal data
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals", id],
     queryFn: async () => {
@@ -33,6 +35,15 @@ const MealDetails = () => {
         `${import.meta.env.VITE_API_URL}/meals/${id}`
       );
       return result.data;
+    },
+  });
+
+  // get user faurd status data to the usersCollection
+  const { data: users } = useQuery({
+    queryKey: ["users", user?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(`/users/${user?.email}`);
+      return data;
     },
   });
   // favorite collection
@@ -63,6 +74,19 @@ const MealDetails = () => {
       price: meal.price,
     };
     await mutateAsync(favoriteInfo);
+  };
+  console.log(users)
+  // role:"chef"
+  // status: "fraud"
+  // order button handler
+
+  const handleOrderClick = () => {
+    if (users?.status === "fraud" && users?.role === "user") {
+      toast.error("Fraud user cannot place orders 🚫");
+      return;
+    }
+    // normal user → navigate to order page
+    navigate(`/order-form/${meals._id}`);
   };
   if (isLoading) return <LoadingSpinner />;
   // ingredients array
@@ -180,7 +204,7 @@ const MealDetails = () => {
               {/*  button */}
               <div className="w-full grid  grid-cols-6 gap-4">
                 {/* order button */}
-                <Link
+                {/* <Link
                   to={`/order-form/${meals._id}`}
                   className="col-span-3 lg:col-span-4"
                 >
@@ -190,7 +214,15 @@ const MealDetails = () => {
                       Order Now
                     </span>
                   </CustomButton>
-                </Link>
+                </Link> */}
+                <div className="col-span-3 lg:col-span-4">
+                  <CustomButton onClick={handleOrderClick}>
+                    <span className="flex justify-center items-center gap-2">
+                      <ShoppingCart size={16} color="#ffffff" />
+                      Order Now
+                    </span>
+                  </CustomButton>
+                </div>
                 {/* favorite button */}
                 <div
                   onClick={() => handleFavorite(meals)}
