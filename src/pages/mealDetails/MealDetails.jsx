@@ -47,11 +47,7 @@ const MealDetails = () => {
     },
   });
   // favorite collection
-  const {
-    mutateAsync,
-    reset: mutationReset,
-    refetch,
-  } = useMutation({
+  const { mutateAsync, reset: mutationReset } = useMutation({
     mutationFn: async (payload) => await axiosSecure.post("/favorite", payload),
     onSuccess: () => {
       // invalidateQueries
@@ -75,10 +71,6 @@ const MealDetails = () => {
     };
     await mutateAsync(favoriteInfo);
   };
-  console.log(users)
-  // role:"chef"
-  // status: "fraud"
-  // order button handler
 
   const handleOrderClick = () => {
     if (users?.status === "fraud" && users?.role === "user") {
@@ -91,6 +83,7 @@ const MealDetails = () => {
   if (isLoading) return <LoadingSpinner />;
   // ingredients array
   const ingredientsArray = meals.ingredients?.[0]?.split("\n");
+  
   return (
     <>
       <Container>

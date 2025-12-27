@@ -19,6 +19,7 @@ import MealDetails from "../pages/mealDetails/MealDetails";
 import OrderForm from "../pages/orderPage/OrderForm";
 import PaymentSuccess from "../pages/payment/PaymentSuccess";
 import MyProfile from "../pages/dashboard/my-profile/MyProfile";
+import AdminRouter from "./AdminRouter";
 
 export const routes = createBrowserRouter([
   {
@@ -105,15 +106,33 @@ export const routes = createBrowserRouter([
 
       {
         path: "dashboard/admin-manageUser",
-        element: <AdminManageUser></AdminManageUser>,
+        element: (
+          <PrivateRouter>
+            <AdminRouter>
+              <AdminManageUser></AdminManageUser>
+            </AdminRouter>
+          </PrivateRouter>
+        ),
       },
       {
         path: "dashboard/admin-manageRequest",
-        element: <AdminManageRequest></AdminManageRequest>,
+        element: (
+          <PrivateRouter>
+            <AdminRouter>
+              <AdminManageRequest></AdminManageRequest>
+            </AdminRouter>
+          </PrivateRouter>
+        ),
       },
       {
         path: "dashboard/admin-PlatformStatistics",
-        element: <AdminPlatformStatistics></AdminPlatformStatistics>,
+        element: (
+          <PrivateRouter>
+            <AdminRouter>
+              <AdminPlatformStatistics></AdminPlatformStatistics>
+            </AdminRouter>
+          </PrivateRouter>
+        ),
       },
     ],
   },

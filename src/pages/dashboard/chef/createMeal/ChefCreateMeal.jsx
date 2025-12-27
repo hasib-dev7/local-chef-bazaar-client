@@ -8,10 +8,11 @@ import { Utensils } from "lucide-react";
 import useAuth from "../../../../hooks/useAuth";
 import Textarea from "../../../../components/ui/Textarea";
 import { imageUpload } from "../../../../utils/imageUpload";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { toast } from "react-toastify";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure.jsx";
+import LoadingSpinner from "../../../../components/shared/spinner/LoadingSpinner.jsx";
 const ChefCreateMeal = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -33,7 +34,14 @@ const ChefCreateMeal = () => {
       toast.error(message);
     },
   });
-
+  // get user chefId  data to the usersCollection
+  const { data: chef, isLoading } = useQuery({
+    queryKey: ["chef", user?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(`/user/chef/${user?.email}`);
+      return data;
+    },
+  });
   const {
     register,
     handleSubmit,
@@ -60,7 +68,6 @@ const ChefCreateMeal = () => {
       toast.error(err.message || "Failed to upload meal image!");
     }
   };
-
   const cardVariants = {
     hidden: { opacity: 0, y: 30, scale: 0.98 },
     show: {
@@ -70,132 +77,139 @@ const ChefCreateMeal = () => {
       transition: { duration: 0.6, ease: "easeOut" },
     },
   };
-
+  if (isLoading) return <LoadingSpinner></LoadingSpinner>;
   // Block if chef is fraud
-  const isBlocked = user?.status === "fraud";
-
+  const isBlocked = chef?.status === "fraud";
+  const { chefId } = chef;
   return (
-    <motion.div
-      variants={cardVariants}
-      initial="hidden"
-      animate="show"
-      className="my-10 w-full lg:w-7/12 mx-auto bg-white/80 backdrop-blur-2xl shadow-xl p-8 border border-white/40 rounded-md"
-    >
-      <div className="flex flex-col items-center">
-        <h1 className="text-4xl font-bold mb-5">Create New Meal</h1>
-        {isBlocked && (
-          <p className="text-red-500 font-medium mb-3 text-center">
-            You are blocked and cannot create meals 🚫
-          </p>
-        )}
-      </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="my-5 space-y-4">
-        {/* Food Name & Chef Name */}
-        <div className="grid lg:grid-cols-2 gap-4">
-          <div className="space-y-1 text-sm">
-            <Label htmlFor="foodName">Food Name</Label>
-            <Input
-              id="foodName"
-              placeholder="Enter food name"
-              {...register("foodName", { required: "Food name is required" })}
-              error={errors.foodName}
-            />
+    <>
+      {isBlocked ? (
+        <p className="text-red-500 font-medium mb-3 text-center">
+          You are blocked and cannot create meals 🚫
+        </p>
+      ) : (
+        <motion.div
+          variants={cardVariants}
+          initial="hidden"
+          animate="show"
+          className="my-10 w-full lg:w-7/12 mx-auto bg-white/80 backdrop-blur-2xl shadow-xl p-8 border border-white/40 rounded-md"
+        >
+          <div className="flex flex-col items-center">
+            <h1 className="text-4xl font-bold mb-5">Create New Meal</h1>
           </div>
-          <div className="space-y-1 text-sm">
-            <Label htmlFor="chefName">Chef Name</Label>
-            <Input
-              id="chefName"
-              value={user?.displayName}
-              {...register("chefName")}
-            />
-          </div>
-        </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="my-5 space-y-4">
+            {/* Food Name & Chef Name */}
+            <div className="grid lg:grid-cols-2 gap-4">
+              <div className="space-y-1 text-sm">
+                <Label htmlFor="foodName">Food Name</Label>
+                <Input
+                  id="foodName"
+                  placeholder="Enter food name"
+                  {...register("foodName", {
+                    required: "Food name is required",
+                  })}
+                  error={errors.foodName}
+                />
+              </div>
+              <div className="space-y-1 text-sm">
+                <Label htmlFor="chefName">Chef Name</Label>
+                <Input
+                  id="chefName"
+                  value={user?.displayName}
+                  {...register("chefName")}
+                />
+              </div>
+            </div>
 
-        {/* Price & Delivery Time */}
-        <div className="grid lg:grid-cols-2 gap-4">
-          <div className="space-y-1 text-sm">
-            <Label htmlFor="price">Price</Label>
-            <Input
-              id="price"
-              type="number"
-              placeholder="Enter price"
-              {...register("price", { required: true, min: 1 })}
-              error={errors.price}
-            />
-          </div>
-          <div className="space-y-1 text-sm">
-            <Label htmlFor="deliveryTime">Estimated Delivery Time</Label>
-            <Input
-              id="deliveryTime"
-              placeholder="e.g., 45 minutes"
-              {...register("deliveryTime", { required: true })}
-              error={errors.deliveryTime}
-            />
-          </div>
-        </div>
+            {/* Price & Delivery Time */}
+            <div className="grid lg:grid-cols-2 gap-4">
+              <div className="space-y-1 text-sm">
+                <Label htmlFor="price">Price</Label>
+                <Input
+                  id="price"
+                  type="number"
+                  placeholder="Enter price"
+                  {...register("price", { required: true, min: 1 })}
+                  error={errors.price}
+                />
+              </div>
+              <div className="space-y-1 text-sm">
+                <Label htmlFor="deliveryTime">Estimated Delivery Time</Label>
+                <Input
+                  id="deliveryTime"
+                  placeholder="e.g., 45 minutes"
+                  {...register("deliveryTime", { required: true })}
+                  error={errors.deliveryTime}
+                />
+              </div>
+            </div>
 
-        {/* Chef ID & Email */}
-        <div className="grid lg:grid-cols-2 gap-4">
-          <div className="space-y-1 text-sm">
-            <Label htmlFor="chefID">Chef ID</Label>
-            <Input id="chefID" {...register("chefID")} />
-          </div>
-          <div className="space-y-1 text-sm">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" value={user?.email} {...register("email")} />
-          </div>
-        </div>
+            {/* Chef ID & Email */}
+            <div className="grid lg:grid-cols-2 gap-4">
+              <div className="space-y-1 text-sm">
+                <Label htmlFor="chefID">Chef ID</Label>
+                <Input id="chefID" value={chefId} {...register("chefID")} />
+              </div>
+              <div className="space-y-1 text-sm">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" value={user?.email} {...register("email")} />
+              </div>
+            </div>
 
-        {/* Image */}
-        <div>
-          <Label htmlFor="image">Food Image</Label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            {...register("image", { required: "Food image is required" })}
-            className="block w-full text-sm text-gray-500 file:py-2 file:px-4 file:rounded-md file:bg-orange-50"
-          />
-          {errors.image && (
-            <p className="text-red-500 text-sm">{errors.image.message}</p>
-          )}
-        </div>
+            {/* Image */}
+            <div>
+              <Label htmlFor="image">Food Image</Label>
+              <input
+                type="file"
+                id="image"
+                accept="image/*"
+                {...register("image", { required: "Food image is required" })}
+                className="block w-full text-sm text-gray-500 file:py-2 file:px-4 file:rounded-md file:bg-orange-50"
+              />
+              {errors.image && (
+                <p className="text-red-500 text-sm">{errors.image.message}</p>
+              )}
+            </div>
 
-        {/* Ingredients */}
-        <div className="space-y-1 text-sm">
-          <Label htmlFor="ingredients">Ingredients (comma separated)</Label>
-          <Textarea
-            id="ingredients"
-            placeholder="e.g., Rice, Chicken"
-            {...register("ingredients", { required: "Ingredients required" })}
-            error={errors.ingredients}
-          />
-        </div>
+            {/* Ingredients */}
+            <div className="space-y-1 text-sm">
+              <Label htmlFor="ingredients">Ingredients (comma separated)</Label>
+              <Textarea
+                id="ingredients"
+                placeholder="e.g., Rice, Chicken"
+                {...register("ingredients", {
+                  required: "Ingredients required",
+                })}
+                error={errors.ingredients}
+              />
+            </div>
 
-        {/* Chef Experience */}
-        <div className="space-y-1 text-sm">
-          <Label htmlFor="chefExperience">Chef's Experience</Label>
-          <Textarea
-            id="chefExperience"
-            placeholder="Your experience"
-            {...register("chefExperience", { required: true })}
-            error={errors.chefExperience}
-          />
-        </div>
+            {/* Chef Experience */}
+            <div className="space-y-1 text-sm">
+              <Label htmlFor="chefExperience">Chef's Experience</Label>
+              <Textarea
+                id="chefExperience"
+                placeholder="Your experience"
+                {...register("chefExperience", { required: true })}
+                error={errors.chefExperience}
+              />
+            </div>
 
-        {/* Submit */}
-        <CustomButton disabled={isBlocked}>
-          {isPending ? (
-            <TbFidgetSpinner className="animate-spin m-auto" />
-          ) : (
-            <span className="flex justify-center items-center gap-2">
-              <Utensils size={16} />
-              Create Meal
-            </span>
-          )}
-        </CustomButton>
-      </form>
-    </motion.div>
+            {/* Submit */}
+            <CustomButton disabled={isBlocked}>
+              {isPending ? (
+                <TbFidgetSpinner className="animate-spin m-auto" />
+              ) : (
+                <span className="flex justify-center items-center gap-2">
+                  <Utensils size={16} />
+                  Create Meal
+                </span>
+              )}
+            </CustomButton>
+          </form>
+        </motion.div>
+      )}
+    </>
   );
 };
 

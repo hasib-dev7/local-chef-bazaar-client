@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../../shared/spinner/LoadingSpinner";
 const ProfileCard = ({ users }) => {
-  const { name, email, image, address, role, status, _id } = users;
+  const { name, email, image, address, role, status, _id, chefId } = users;
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   // get pendding role request data
@@ -85,7 +85,7 @@ const ProfileCard = ({ users }) => {
           {/* Only for chef */}
           {role === "chef" && (
             <p>
-              <span className="font-medium">Chef ID:</span> CHEF-XXXX
+              <span className="font-medium">Chef ID:</span> {chefId}
             </p>
           )}
         </div>
