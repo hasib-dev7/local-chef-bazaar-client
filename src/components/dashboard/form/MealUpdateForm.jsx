@@ -18,7 +18,7 @@ const MealUpdateForm = ({ updateMeal, setIsUpdateModalOpen }) => {
   const {
     isPending,
     isError,
-    
+
     mutateAsync,
     reset: mutationReset,
   } = useMutation({
@@ -35,7 +35,6 @@ const MealUpdateForm = ({ updateMeal, setIsUpdateModalOpen }) => {
       toast.error("Failed to update meal ❌");
     },
   });
-  console.log(updateMeal);
   const {
     register,
     handleSubmit,
@@ -56,7 +55,12 @@ const MealUpdateForm = ({ updateMeal, setIsUpdateModalOpen }) => {
     // Ingredients clean array
     const ingredientsArray = ingredients.split(",").map((item) => item.trim());
     try {
-      const imageURL = await imageUpload(imageFile);
+      let imageURL = updateMeal.image; //  default old image
+
+      //  only upload if new image selected
+      if (image && image.length > 0) {
+        imageURL = await imageUpload(imageFile);
+      }
       const mealsData = {
         foodName,
         price: Number(price),
@@ -187,9 +191,7 @@ const MealUpdateForm = ({ updateMeal, setIsUpdateModalOpen }) => {
       bg-gray-100 border border-dashed border-orange-300 rounded-md cursor-pointer
       focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400
       py-2"
-              {...register("image", {
-                required: " Food image is required",
-              })}
+              {...register("image", {})}
             />
             <p className="mt-1  text-xs text-gray-400">
               PNG, JPG or JPEG (max 2MB)

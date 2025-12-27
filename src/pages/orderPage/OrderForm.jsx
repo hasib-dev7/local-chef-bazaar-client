@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import Container from "../../components/container/Container";
 import { MoveLeft } from "lucide-react";
 import axios from "axios";
@@ -9,7 +9,6 @@ import LoadingSpinner from "../../components/shared/spinner/LoadingSpinner";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure.jsx";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const OrderForm = () => {
@@ -18,6 +17,7 @@ const OrderForm = () => {
   const [userAddress, setUserAddress] = useState("");
   const [userAddressError, setUserAddressError] = useState("");
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals", id],
     queryFn: async () => {
@@ -101,6 +101,8 @@ const OrderForm = () => {
             icon: "success",
             confirmButtonText: "OK",
           });
+          // navigate my order dashboard page
+          navigate("/dashboard/dashboard/user-orders");
         } catch (error) {
           Swal.fire({
             title: "Error!",

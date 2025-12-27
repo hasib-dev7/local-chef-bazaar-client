@@ -37,13 +37,20 @@ const MealDetails = () => {
       return result.data;
     },
   });
-
   // get user faurd status data to the usersCollection
   const { data: users } = useQuery({
     queryKey: ["users", user?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(`/users/${user?.email}`);
       return data;
+    },
+  });
+  // reviews rating
+  const { data: reviews = [] } = useQuery({
+    queryKey: ["reviews", id],
+    queryFn: async () => {
+      const result = await axiosSecure.get(`/reviews?foodId=${id}`);
+      return result.data;
     },
   });
   // favorite collection
@@ -83,7 +90,7 @@ const MealDetails = () => {
   if (isLoading) return <LoadingSpinner />;
   // ingredients array
   const ingredientsArray = meals.ingredients?.[0]?.split("\n");
-  
+
   return (
     <>
       <Container>
@@ -109,7 +116,16 @@ const MealDetails = () => {
                 <span>
                   <Star size={16} color="#ffd500" />
                 </span>
-                <span className="text-black">0.5</span>
+                <span className="text-black">
+                  {reviews.length > 0
+                    ? (
+                        reviews.reduce(
+                          (acc, curr) => acc + (curr.rating || 0),
+                          0
+                        ) / reviews.length
+                      ).toFixed(1)
+                    : "0"}
+                </span>
               </div>
             </div>
             {/* right side  card text details */}
@@ -126,7 +142,7 @@ const MealDetails = () => {
                   </span>
                 </p>
                 <p className="bg-white/90 text-sm text-secondary px-5 py-1 rounded-2xl shadow">
-                  ID:chef id
+                  ID : {meals.chefID}
                 </p>
               </div>
               {/* price */}
@@ -158,7 +174,7 @@ const MealDetails = () => {
                     <p className="text-[#7e6f67]">Delivery Area</p>
                     <p className="flex items-center gap-2">
                       <span className="text-secondary font-semibold text-sm">
-                        Location
+                        {meals.address}
                       </span>
                     </p>
                   </div>

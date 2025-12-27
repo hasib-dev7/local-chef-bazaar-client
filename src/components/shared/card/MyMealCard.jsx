@@ -4,9 +4,11 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure.jsx";
 import { useState } from "react";
 import UpdateModal from "../../dashboard/modal/UpdateModal";
+import { useQuery } from "@tanstack/react-query";
 const MyMealCard = ({ myMeal, refetch }) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const { image, foodName, deliveryTime, price, _id, chefName } = myMeal;
+
   // ingredients array
   const ingredientsArray = myMeal.ingredients?.[0]?.split("\n");
 
@@ -14,6 +16,14 @@ const MyMealCard = ({ myMeal, refetch }) => {
   const remainingCount =
     ingredientsArray?.length > 3 ? ingredientsArray.length - 3 : 0;
   const axiosSecure = useAxiosSecure();
+  // reviews rating
+  const { data: reviews = [] } = useQuery({
+    queryKey: ["reviews", _id],
+    queryFn: async () => {
+      const result = await useAxiosSecure.get(`/reviews?foodId=${_id}`);
+      return result.data;
+    },
+  });
   //  item delete
   const handleItemDelete = (id) => {
     Swal.fire({
@@ -56,7 +66,14 @@ const MyMealCard = ({ myMeal, refetch }) => {
             <span>
               <Star size={16} color="#ffd500" />
             </span>
-            <span className="text-black">0.5</span>
+            <span className="text-black">
+              {reviews.length > 0
+                ? (
+                    reviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) /
+                    reviews.length
+                  ).toFixed(1)
+                : "0"}
+            </span>
           </div>
         </div>
         <div className="px-5 space-y-3">

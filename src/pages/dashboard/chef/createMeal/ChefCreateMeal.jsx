@@ -17,10 +17,18 @@ const ChefCreateMeal = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
+  // Get chef data from API
+  const { data: chef, isLoading } = useQuery({
+    queryKey: ["chef", user?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(`/user/chef/${user?.email}`);
+      return data;
+    },
+  });
+  // Mutation for creating meal
   const {
     mutateAsync,
     isPending,
-    // isError,
     reset: mutationReset,
   } = useMutation({
     mutationFn: async (payload) => await axiosSecure.post("/meals", payload),
@@ -34,22 +42,14 @@ const ChefCreateMeal = () => {
       toast.error(message);
     },
   });
-  // get user chefId  data to the usersCollection
-  const { data: chef, isLoading } = useQuery({
-    queryKey: ["chef", user?.email],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get(`/user/chef/${user?.email}`);
-      return data;
-    },
-  });
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
-
   const onSubmit = async (data) => {
+    if (!chef) return toast.error("Chef data not loaded yet!");
     const ingredientsArray = data.ingredients.split(",").map((i) => i.trim());
     try {
       const imageURL = await imageUpload(data.image[0]);
@@ -58,10 +58,13 @@ const ChefCreateMeal = () => {
         price: Number(data.price),
         chef_email: user?.email,
         chef_image: user?.photoURL,
-        chefID: data.chefID,
+        chefID: chef?.chefId, // chefId from API
+        chefName: chef?.name, // chef name from API
         image: imageURL,
         ingredients: ingredientsArray,
+        address: chef?.address, // now address will be included
       };
+    //  send to data server db
       await mutateAsync(mealData);
       reset();
     } catch (err) {
@@ -77,10 +80,8 @@ const ChefCreateMeal = () => {
       transition: { duration: 0.6, ease: "easeOut" },
     },
   };
-  if (isLoading) return <LoadingSpinner></LoadingSpinner>;
-  // Block if chef is fraud
+  if (isLoading) return <LoadingSpinner />;
   const isBlocked = chef?.status === "fraud";
-  const { chefId } = chef;
   return (
     <>
       {isBlocked ? (
@@ -115,12 +116,12 @@ const ChefCreateMeal = () => {
                 <Label htmlFor="chefName">Chef Name</Label>
                 <Input
                   id="chefName"
-                  value={user?.displayName}
+                  value={chef?.name}
                   {...register("chefName")}
+                  readOnly
                 />
               </div>
             </div>
-
             {/* Price & Delivery Time */}
             <div className="grid lg:grid-cols-2 gap-4">
               <div className="space-y-1 text-sm">
@@ -143,19 +144,27 @@ const ChefCreateMeal = () => {
                 />
               </div>
             </div>
-
             {/* Chef ID & Email */}
             <div className="grid lg:grid-cols-2 gap-4">
               <div className="space-y-1 text-sm">
                 <Label htmlFor="chefID">Chef ID</Label>
-                <Input id="chefID" value={chefId} {...register("chefID")} />
+                <Input
+                  id="chefID"
+                  value={chef?.chefId}
+                  {...register("chefID")}
+                  readOnly
+                />
               </div>
               <div className="space-y-1 text-sm">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" value={user?.email} {...register("email")} />
+                <Input
+                  id="email"
+                  value={user?.email}
+                  {...register("email")}
+                  readOnly
+                />
               </div>
             </div>
-
             {/* Image */}
             <div>
               <Label htmlFor="image">Food Image</Label>
@@ -170,7 +179,6 @@ const ChefCreateMeal = () => {
                 <p className="text-red-500 text-sm">{errors.image.message}</p>
               )}
             </div>
-
             {/* Ingredients */}
             <div className="space-y-1 text-sm">
               <Label htmlFor="ingredients">Ingredients (comma separated)</Label>
@@ -183,7 +191,6 @@ const ChefCreateMeal = () => {
                 error={errors.ingredients}
               />
             </div>
-
             {/* Chef Experience */}
             <div className="space-y-1 text-sm">
               <Label htmlFor="chefExperience">Chef's Experience</Label>
@@ -194,7 +201,6 @@ const ChefCreateMeal = () => {
                 error={errors.chefExperience}
               />
             </div>
-
             {/* Submit */}
             <CustomButton disabled={isBlocked}>
               {isPending ? (

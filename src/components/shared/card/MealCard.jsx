@@ -1,10 +1,20 @@
 /* eslint-disable no-unused-vars */
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ChefHat, Clock5, MapPin, Star } from "lucide-react";
 import { Link } from "react-router";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MealCard = ({ meal }) => {
   const { image, foodName, chefName, deliveryTime, price, _id } = meal;
+  // reviews rating
+  const { data: reviews = [] } = useQuery({
+    queryKey: ["reviews", _id],
+    queryFn: async () => {
+      const result = await useAxiosSecure.get(`/reviews?foodId=${_id}`);
+      return result.data;
+    },
+  });
   return (
     <>
       <div className="w-full bg-white   cursor-pointe rounded-2xl">
@@ -15,13 +25,20 @@ const MealCard = ({ meal }) => {
             src={image}
             alt={foodName}
           />
-         
+
           {/* rating */}
           <div className="flex justify-center items-center gap-1 px-3 py-1 bg-[#7e6f67] rounded-2xl absolute top-3 right-3">
             <span>
               <Star size={16} color="#ffd500" />
             </span>
-            <span className="text-black">0.5</span>
+            <span className="text-black">
+              {reviews.length > 0
+                ? (
+                    reviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) /
+                    reviews.length
+                  ).toFixed(1)
+                : "0"}
+            </span>
           </div>
         </div>
         <div className="px-5 space-y-3">
