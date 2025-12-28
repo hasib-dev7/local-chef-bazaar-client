@@ -1,43 +1,67 @@
-import MealCard from "../../components/shared/card/MealCard";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import LoadingSpinner from "../../components/shared/spinner/LoadingSpinner";
 import Container from "../../components/container/Container";
-
+import MealCard from "../../components/shared/card/MealCard";
+import LoadingSpinner from "../../components/shared/spinner/LoadingSpinner";
 const Meals = () => {
+  const [sortOrder, setSortOrder] = useState("asc");
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals"],
     queryFn: async () => {
-      const result = await axios.get(`${import.meta.env.VITE_API_URL}/meals`);
-      return result.data;
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/meals`);
+      return res.data;
     },
   });
-  if (isLoading) return <LoadingSpinner></LoadingSpinner>;
+  if (isLoading) return <LoadingSpinner />;
+  //  SORT FIX (string → number)
+  const sortedMeals = [...meals].sort((a, b) => {
+    const priceA = Number(a.price);
+    const priceB = Number(b.price);
+    return sortOrder === "asc" ? priceA - priceB : priceB - priceA;
+  });
   return (
     <>
-      <div className=" bg-linear-to-r from-[#f9ecdd] to-[#e6f0e6] py-8 lg:py-16">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-[#f9ecdd] to-[#e6f0e6] py-14">
         <Container>
-          <div className="w-full lg:w-6/12 mx-auto text-center py-5">
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-secondary mb-4">
-              Discover <span class="text-primary">Delicious</span> Meals
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold text-secondary">
+              Discover <span className="text-primary">Delicious</span> Meals
             </h1>
-            <p className="text-[#7e6f67]">
-              Explore our collection of homemade dishes prepared fresh by
-              talented local chefs. Find your next favorite meal today!
+            <p className="mt-4 text-[#7e6f67]">
+              Fresh homemade meals by experienced chefs. Choose your favorite
+              dish and enjoy!
             </p>
           </div>
         </Container>
       </div>
-
+      {/* Sort + Cards */}
       <Container>
-        {/* meals card */}
-        {meals && meals.length > 0 ? (
-          <div className="py-5 md:py-8 lg:py-12 grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {meals.map((meal) => (
+        {/* Sort Bar */}
+        <div className="flex flex-col md:flex-row justify-between items-center py-6 gap-4">
+          <h2 className="text-2xl font-semibold text-secondary">
+            Available Meals
+          </h2>
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none"
+          >
+            <option value="asc">Price: Low to High</option>
+            <option value="desc">Price: High to Low</option>
+          </select>
+        </div>
+        {/* Meals Grid */}
+        {sortedMeals.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-14">
+            {sortedMeals.map((meal) => (
               <MealCard key={meal._id} meal={meal} />
             ))}
           </div>
-        ) : null}
+        ) : (
+          <p className="text-center py-10 text-gray-500">No meals found</p>
+        )}
       </Container>
     </>
   );
