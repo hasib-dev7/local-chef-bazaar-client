@@ -1,3 +1,4 @@
+import { Line } from "recharts";
 import LoadingSpinner from "../../../components/shared/spinner/LoadingSpinner";
 import TitleLogo from "../../../components/shared/TitleLogo/TitleLogo";
 import useRole from "../../../hooks/useRole";
@@ -5,6 +6,7 @@ import AdminMenu from "../admin/adminMenue/AdminMenu";
 import ChefMenu from "../chef/chefMenue/ChefMenu";
 import ProfileMenu from "../my-profile/profileMenu/ProfileMenu";
 import UserMenu from "../user/userMenu/UserMenu";
+import { Link } from "react-router";
 
 const Sidebar = ({ isMobile, onClose }) => {
   const [role, isLoading] = useRole();
@@ -32,9 +34,9 @@ const Sidebar = ({ isMobile, onClose }) => {
         </div>
 
         <div className="mt-auto p-4">
-          <a href="/" className="text-sm text-gray-600" onClick={onClose}>
+          <Link to="/" className="text-sm text-gray-600" onClick={onClose}>
             ← Back to Home
-          </a>
+          </Link>
         </div>
       </aside>
     </>

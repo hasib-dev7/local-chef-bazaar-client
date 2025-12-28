@@ -22,6 +22,7 @@ const Meals = () => {
   });
   return (
     <>
+      <title>Local Chef Bazaar - Meals</title>
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-[#f9ecdd] to-[#e6f0e6] py-14">
         <Container>

@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../../pages/dashboard/sidebar/Sidebar";
 import { Menu, X } from "lucide-react";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLocation, useNavigation } from "react-router";
 import DashboardNavbar from "../../components/shared/navber/DashboardNavbar";
 import { Bounce, ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
 
 const DashboardLayout = () => {
+  const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const location = useLocation();
   useEffect(() => {
     setOpen(false);
   }, [location.pathname, setOpen]);
+  // Global loading page for whole app
+  if (navigation.state === "loading") {
+    return <LoadingSpinner></LoadingSpinner>;
+  }
   return (
     <>
+      <title>Local Chef Bazaar - Dashboard</title>
       <div className="min-h-screen flex ">
         {/* Desktop Sidebar */}
         <Sidebar isMobile={false} />

@@ -17,6 +17,7 @@ const MyProfile = () => {
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
   return (
     <>
+     <title>Local Chef Bazaar -My Profile</title>
       <div>
         {users.map((user) => (
           <ProfileCard key={user._id} users={user}></ProfileCard>

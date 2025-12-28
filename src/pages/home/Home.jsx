@@ -19,6 +19,7 @@ const Home = () => {
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
   return (
     <>
+      <title>Local Chef Bazaar - Home</title>
       <Container>
         {/* banner section */}
         <div className="mt-8 lg:mt-12">

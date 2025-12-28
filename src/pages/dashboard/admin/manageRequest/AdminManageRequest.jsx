@@ -29,6 +29,7 @@ const AdminManageRequest = () => {
   };
   return (
     <>
+     <title>Local Chef Bazaar - Manage Request</title>
       <div className="p-6">
         <h2 className="text-xl font-bold mb-4">Manage Role Requests</h2>
         <table className="table w-full">

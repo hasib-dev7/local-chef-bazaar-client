@@ -17,6 +17,7 @@ const PaymentSuccess = () => {
   }, [sessionId, axiosSecure]);
   return (
     <>
+     <title>Local Chef Bazaar - PaymentSuccess</title>
       <div className="flex flex-col items-center justify-center mt-20">
         <div className="bg-white p-10 rounded-lg shadow-lg text-center">
           <IoBagCheckOutline className="w-16 h-16 text-green-500 mx-auto mb-4" />

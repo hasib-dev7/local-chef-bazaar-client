@@ -25,6 +25,7 @@ const AdminPlatformStatistics = () => {
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
   return (
     <>
+      <title>Local Chef Bazaar - Statistics</title>
       <h1 className="text-xl lg:text-3xl text-secondary font-bold mb-5">
         Platform Statistics
       </h1>

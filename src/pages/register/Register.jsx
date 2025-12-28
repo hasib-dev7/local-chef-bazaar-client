@@ -82,6 +82,7 @@ const Register = () => {
       animate="show"
       className="my-10 w-full lg:w-4/12 mx-auto bg-white/80  backdrop-blur-2xl shadow-xl p-8 border border-white/40 rounded-md"
     >
+      <title>Local Chef Bazaar - Register</title>
       <div className="flex flex-col items-center ">
         <h1 className=" text-xl font-bold mt-5 ">Create Account</h1>
         <p className="text-gray-600">Join our community of food lovers</p>

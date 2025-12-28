@@ -32,6 +32,7 @@ const AdminManageUser = () => {
   if (isLoading) return <LoadingSpinner />;
   return (
     <>
+     <title>Local Chef Bazaar - Manage User</title>
       <div className="p-4">
         <h2 className="text-2xl font-semibold mb-4">Manage Users</h2>
         <div className="overflow-x-auto">

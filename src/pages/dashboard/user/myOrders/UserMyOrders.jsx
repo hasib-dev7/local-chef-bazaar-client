@@ -19,7 +19,7 @@ const UserMyOrders = () => {
   
   return (
     <>
-     
+      <title>Local Chef Bazaar - My Order</title>
         <h1 className="text-2xl md:text-3xl font-bold mb-6 text-secondary">My Orders</h1>
 
         {orders.length === 0 ? (

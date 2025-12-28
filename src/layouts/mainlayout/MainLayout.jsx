@@ -1,10 +1,17 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigation } from "react-router";
 import Navber from "../../components/shared/navber/Navber";
 import Footer from "../../components/shared/footer/Footer";
 import { Bounce, ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
+import LoadingSpinner from "../../components/shared/spinner/LoadingSpinner";
 
 const MainLayout = () => {
+  const navigation = useNavigation();
+
+  // Global loading page for whole app
+  if (navigation.state === "loading") {
+    return <LoadingSpinner></LoadingSpinner>;
+  }
   return (
     <>
       <div className="flex flex-col  min-h-screen ">

@@ -25,8 +25,8 @@ const ChefMyMeals = () => {
 
   return (
     <>
+      <title>Local Chef Bazaar - My Meals</title>
       <h1 className="text-lg lg:text-2xl text-secondary font-bold">My Meals</h1>
-
       {meals.length === 0 ? (
         <p className="mt-6 text-gray-500 text-center">
           You have not placed any meals yet.

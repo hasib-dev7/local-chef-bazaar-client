@@ -23,6 +23,7 @@ const UserMyReview = () => {
 
   return (
     <>
+     <title>Local Chef Bazaar - My Reviews</title>
       <h1 className="text-2xl md:text-3xl font-bold mb-6 text-secondary">
         My Reviews
       </h1>

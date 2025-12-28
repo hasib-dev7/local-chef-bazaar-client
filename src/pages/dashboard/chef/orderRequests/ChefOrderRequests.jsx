@@ -16,10 +16,10 @@ const ChefOrderRequests = () => {
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
   return (
     <>
+      <title>Local Chef Bazaar - Order Request</title>
       <h1 className="text-2xl md:text-3xl font-bold mb-6 text-secondary">
         My Orders
       </h1>
-
       {requestOrders.length === 0 ? (
         <p className="text-center text-gray-500">
           You have not placed any order requests yet.

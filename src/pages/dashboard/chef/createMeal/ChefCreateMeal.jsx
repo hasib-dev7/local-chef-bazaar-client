@@ -84,6 +84,7 @@ const ChefCreateMeal = () => {
   const isBlocked = chef?.status === "fraud";
   return (
     <>
+     <title>Local Chef Bazaar - Create Meals</title>
       {isBlocked ? (
         <p className="text-red-500 font-medium mb-3 text-center">
           You are blocked and cannot create meals 🚫

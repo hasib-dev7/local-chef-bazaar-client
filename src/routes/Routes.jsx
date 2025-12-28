@@ -8,7 +8,6 @@ import PrivateRouter from "./PrivateRouter";
 import DashboardLayout from "../layouts/dashboard/DashboardLayout";
 import UserMyOrders from "../pages/dashboard/user/myOrders/UserMyOrders";
 import UserMyReview from "../pages/dashboard/user/myReview/UserMyReview";
-import UserFavoriteMeal from "../pages/dashboard/user/favoriteMeal/UserFavoriteMeal";
 import ChefMyMeals from "../pages/dashboard/chef/myMeals/ChefMyMeals";
 import ChefCreateMeal from "../pages/dashboard/chef/createMeal/ChefCreateMeal";
 import ChefOrderRequests from "../pages/dashboard/chef/orderRequests/ChefOrderRequests";
@@ -20,11 +19,14 @@ import OrderForm from "../pages/orderPage/OrderForm";
 import PaymentSuccess from "../pages/payment/PaymentSuccess";
 import MyProfile from "../pages/dashboard/my-profile/MyProfile";
 import AdminRouter from "./AdminRouter";
-
+import ErrorPages from "../pages/error/ErrorPages";
+import ChefRouter from "./ChefRouter";
+import UserFavoriteMeal from "../pages/dashboard/user/favoriteMeal/UserFavoriteMeal";
 export const routes = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout></MainLayout>,
+    errorElement: <ErrorPages></ErrorPages>,
     children: [
       {
         index: true,
@@ -36,11 +38,19 @@ export const routes = createBrowserRouter([
       },
       {
         path: "meal-details/:id",
-        element: <MealDetails></MealDetails>,
+        element: (
+          <PrivateRouter>
+            <MealDetails></MealDetails>
+          </PrivateRouter>
+        ),
       },
       {
         path: "order-form/:id",
-        element: <OrderForm></OrderForm>,
+        element: (
+          <PrivateRouter>
+            <OrderForm></OrderForm>
+          </PrivateRouter>
+        ),
       },
       // login and register pages
       {
@@ -66,41 +76,80 @@ export const routes = createBrowserRouter([
         <DashboardLayout></DashboardLayout>
       </PrivateRouter>
     ),
+    errorElement: <ErrorPages></ErrorPages>,
     children: [
       {
         index: true,
-        element: <MyProfile></MyProfile>,
+        element: (
+          <PrivateRouter>
+            <MyProfile></MyProfile>
+          </PrivateRouter>
+        ),
       },
       {
         path: "my-profile",
-        element: <MyProfile></MyProfile>,
+        element: (
+          <PrivateRouter>
+            <MyProfile></MyProfile>
+          </PrivateRouter>
+        ),
       },
       // user dashboard
       {
         path: "dashboard/user-orders",
-        element: <UserMyOrders></UserMyOrders>,
+        element: (
+          <PrivateRouter>
+            <UserMyOrders></UserMyOrders>
+          </PrivateRouter>
+        ),
       },
       {
         path: "dashboard/user-review",
-        element: <UserMyReview></UserMyReview>,
+        element: (
+          <PrivateRouter>
+            <UserMyReview></UserMyReview>
+          </PrivateRouter>
+        ),
       },
       {
         path: "dashboard/user-favoriteMeal",
-        element: <UserFavoriteMeal></UserFavoriteMeal>,
+        element: (
+          <PrivateRouter>
+            <UserFavoriteMeal></UserFavoriteMeal>
+          </PrivateRouter>
+        ),
       },
       // chef dasboard
 
       {
         path: "dashboard/chef-createMeal",
-        element: <ChefCreateMeal></ChefCreateMeal>,
+        element: (
+          <PrivateRouter>
+            <ChefRouter>
+              <ChefCreateMeal></ChefCreateMeal>
+            </ChefRouter>
+          </PrivateRouter>
+        ),
       },
       {
         path: "dashboard/chef-myMeals",
-        element: <ChefMyMeals></ChefMyMeals>,
+        element: (
+          <PrivateRouter>
+            <ChefRouter>
+              <ChefMyMeals></ChefMyMeals>
+            </ChefRouter>
+          </PrivateRouter>
+        ),
       },
       {
         path: "dashboard/chef-orderRequest",
-        element: <ChefOrderRequests></ChefOrderRequests>,
+        element: (
+          <PrivateRouter>
+            <ChefRouter>
+              <ChefOrderRequests></ChefOrderRequests>
+            </ChefRouter>
+          </PrivateRouter>
+        ),
       },
       // admin dashboard
 

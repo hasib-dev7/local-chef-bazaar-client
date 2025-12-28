@@ -22,6 +22,7 @@ const UserFavoriteMeal = () => {
   console.log(favorite);
   return (
     <>
+     <title>Local Chef Bazaar -Favorite Meals</title>
       <h1 className="text-2xl md:text-3xl font-bold mb-6 text-secondary">
         My favorite
       </h1>

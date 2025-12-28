@@ -10,6 +10,7 @@ import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure.jsx";
 import Swal from "sweetalert2";
+import ErrorPages from "../error/ErrorPages.jsx";
 
 const OrderForm = () => {
   const { id } = useParams();
@@ -18,7 +19,11 @@ const OrderForm = () => {
   const [userAddressError, setUserAddressError] = useState("");
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { data: meals = [], isLoading } = useQuery({
+  const {
+    data: meals = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["meals", id],
     queryFn: async () => {
       const result = await axios.get(
@@ -120,8 +125,10 @@ const OrderForm = () => {
   // console.log(data);
 
   if (isLoading) return <LoadingSpinner />;
+  if (isError) return <ErrorPages></ErrorPages>;
   return (
     <>
+     <title>Local Chef Bazaar - Order Page</title>
       <Container>
         <section className="py-5 md:py-8 lg:py-12">
           <Link to={`/meal-details/${id}`} className="flex items-center gap-2">

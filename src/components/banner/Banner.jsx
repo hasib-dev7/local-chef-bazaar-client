@@ -2,7 +2,12 @@
 import { motion } from "framer-motion";
 import heroImage from "../../assets/banner.jfif";
 import { ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router";
 const Banner = () => {
+  const navigate=useNavigate()
+  const handleMealsPage=()=>{
+    navigate("/meals")
+  }
   return (
     <>
       <div
@@ -36,8 +41,8 @@ const Banner = () => {
           </motion.p>
 
           {/* CTA Button */}
-          <motion.a
-            href="/meals"
+          <motion.div
+           onClick={handleMealsPage}
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 1 }}
@@ -45,7 +50,7 @@ const Banner = () => {
           >
             <ShoppingCart size={20} />
             Order Now
-          </motion.a>
+          </motion.div>
         </div>
       </div>
     </>

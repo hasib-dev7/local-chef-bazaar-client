@@ -21,6 +21,7 @@ import CustomerReviewsCard from "../customerReviews/CustomerReviewsCard";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
+import ErrorPages from "../error/ErrorPages";
 const MealDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
@@ -28,7 +29,11 @@ const MealDetails = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   // get user email meal data
-  const { data: meals = [], isLoading } = useQuery({
+  const {
+    data: meals = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["meals", id],
     queryFn: async () => {
       const result = await axios.get(
@@ -88,11 +93,13 @@ const MealDetails = () => {
     navigate(`/order-form/${meals._id}`);
   };
   if (isLoading) return <LoadingSpinner />;
+  if (isError) return <ErrorPages></ErrorPages>;
   // ingredients array
   const ingredientsArray = meals.ingredients?.[0]?.split("\n");
 
   return (
     <>
+      <title>{meals.foodName}</title>
       <Container>
         {/* customer card section */}
         <section className="pt-5 md:pt-8 lg:pt-12">

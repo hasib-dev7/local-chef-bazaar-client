@@ -90,6 +90,7 @@ const Login = () => {
       animate="show"
       className="my-10 w-full lg:w-4/12 mx-auto bg-white/80  backdrop-blur-2xl shadow-xl p-8 border border-white/40 rounded-md"
     >
+      <title>Local Chef Bazaar - Login</title>
       {/* from heading and paragraph */}
       <div className="flex flex-col items-center">
         <h1 className=" text-4xl font-bold mb-5">Sign In</h1>
