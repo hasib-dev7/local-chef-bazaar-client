@@ -19,7 +19,7 @@ const UserMyReview = () => {
     },
   });
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
-  console.log(reviews);
+  // console.log(reviews);
 
   return (
     <>

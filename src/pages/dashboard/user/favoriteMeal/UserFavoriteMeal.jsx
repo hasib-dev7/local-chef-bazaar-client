@@ -19,7 +19,7 @@ const UserFavoriteMeal = () => {
     },
   });
   if (isLoading) return <LoadingSpinner></LoadingSpinner>;
-  console.log(favorite);
+  // console.log(favorite);
   return (
     <>
      <title>Local Chef Bazaar -Favorite Meals</title>

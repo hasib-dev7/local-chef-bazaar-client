@@ -12,7 +12,7 @@ const MyOrder = ({ order }) => {
     orderStatus === "accepted" && paymentStatus === "pending";
   // payment
   const handlePayment = async (order) => {
-    console.log("payment", order);
+    // console.log("payment", order);
     const paymentInfo = {
       foodId: order._id,
       foodName: order.foodName,

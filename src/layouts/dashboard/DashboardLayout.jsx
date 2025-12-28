@@ -7,16 +7,16 @@ import { Bounce, ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
 
 const DashboardLayout = () => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const location = useLocation();
   useEffect(() => {
     setOpen(false);
   }, [location.pathname, setOpen]);
   // Global loading page for whole app
-  if (navigation.state === "loading") {
-    return <LoadingSpinner></LoadingSpinner>;
-  }
+  // if (navigation.state === "loading") {
+  //   return <LoadingSpinner></LoadingSpinner>;
+  // }
   return (
     <>
       <title>Local Chef Bazaar - Dashboard</title>

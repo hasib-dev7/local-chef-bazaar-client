@@ -6,12 +6,12 @@ import { Toaster } from "react-hot-toast";
 import LoadingSpinner from "../../components/shared/spinner/LoadingSpinner";
 
 const MainLayout = () => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   // Global loading page for whole app
-  if (navigation.state === "loading") {
-    return <LoadingSpinner></LoadingSpinner>;
-  }
+  // if (navigation.state === "loading") {
+  //   return <LoadingSpinner></LoadingSpinner>;
+  // }
   return (
     <>
       <div className="flex flex-col  min-h-screen ">

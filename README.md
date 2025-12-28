@@ -1,16 +1,75 @@
-# React + Vite
+# Local Chef Bazzar Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Name
 
-Currently, two official plugins are available:
+**Delicious Meals** – Homemade Meals Ordering & Dashboard System
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Live URL
 
-## React Compiler
+https://local-chef-bazaar-4acb09.netlify.app/
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Purpose
 
-## Expanding the ESLint configuration
+This project is a full-stack web application designed to let users explore, order, and review homemade meals prepared by local chefs. It includes a public-facing meals catalog, user dashboards, chef dashboards, and admin management features. The app emphasizes a smooth UX with global loading and error handling.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Key Features
+
+### Public User Features
+
+- View all daily meals with chef info, price, rating, and delivery area
+- Sort meals by price (ascending/descending)
+- Search and filter meals (future)
+- Meal details page
+- Place orders with a user-friendly order form
+- Global loading page while data is being fetched
+- Error page for invalid URLs or API errors
+- Login/Register functionality
+
+### User Dashboard
+
+- View and manage personal orders
+- Submit and view reviews
+- View favorite meals
+
+### Chef Dashboard
+
+- Add new meals
+- View and manage own meals
+- Handle order requests from customers
+
+### Admin Dashboard
+
+- Manage users
+- Manage meal requests
+- View platform statistics
+
+### Additional Features
+
+- Responsive design for desktop and mobile
+- React Query for data fetching
+- Toast notifications (react-toastify & react-hot-toast)
+- Private routes with role-based access
+- Error boundaries using React Router `errorElement`
+
+## Tech Stack
+
+- **Frontend:** React, React Router v6, TailwindCSS
+- **Backend:** Node.js, Express.js, MongoDB
+- **State Management / Data Fetching:** React Query
+- **Notifications:** react-toastify, react-hot-toast
+- **Icons:** Lucide-react
+- **Animations:** Framer Motion (optional)
+- **Other Packages:** axios, sweetalert2
+
+## NPM Packages Used
+
+- `react-router-dom` – Routing
+- `react-query` – Data fetching and caching
+- `axios` – HTTP requests
+- `react-toastify` – Toast notifications
+- `react-hot-toast` – Toast notifications
+- `lucide-react` – Icons
+- `framer-motion` – Animations
+- `sweetalert2` – Alerts & confirmations
+- `tailwindcss` – Styling
+- `react` & `react-dom` – Frontend library
